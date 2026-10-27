@@ -49,7 +49,7 @@ public sealed class WebAppHost : IAsyncDisposable
     private static string RepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "PKHeX.CLI.sln")))
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "global.json")))
             directory = directory.Parent;
 
         return directory?.FullName ?? throw new InvalidOperationException("Repository root not found");

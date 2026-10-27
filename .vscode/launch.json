@@ -10,8 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/PKHeX.CLI/bin/Debug/net8.0/PKHeX.CLI.dll",
-            "args": ["${workspaceFolder}/src/PKHeX.CLI/data/savedata.bin"],
+            "program": "${workspaceFolder}/src/PKHeX.Everywhere.Engine.Host/bin/Debug/net10.0/PKHeX.Everywhere.Engine.Host.dll",
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "integratedTerminal",
