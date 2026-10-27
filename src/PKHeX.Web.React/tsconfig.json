@@ -3,7 +3,11 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "jsx": "react-jsx",
     "strict": true,
     "noEmit": true,
@@ -11,8 +15,18 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "preserveSymlinks": true,
-    "customConditions": ["source"],
-    "types": ["vite/client", "node"]
+    "customConditions": [
+      "source"
+    ],
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "resolveJsonModule": true
   },
-  "include": ["src", "vite.config.ts", "vitest.config.ts"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
 }

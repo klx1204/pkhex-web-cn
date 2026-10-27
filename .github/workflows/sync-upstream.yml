@@ -1,0 +1,108 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Check upstream
+        id: check
+        run: |
+          git remote add upstream https://github.com/arleypadua/PKHeX.Everywhere.git
+          git fetch --no-tags upstream main
+          echo "count=$(git rev-list --count HEAD..upstream/main)" >> "$GITHUB_OUTPUT"
+
+      - name: Merge upstream
+        id: merge
+        if: steps.check.outputs.count != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="sync/upstream-$(date -u +%Y%m%d)"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          git checkout -b "$branch"
+          if git merge --no-edit upstream/main; then
+            echo "conflict=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --name-only --diff-filter=U | tee conflicts.txt
+            git merge --abort
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open conflict issue
+        if: steps.merge.outputs.conflict == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body=$(printf '自动合并 upstream 时出现冲突，请在本地解决：\n\n```\n%s\n```\n\n处理提示：\n\n- 我们删除过的文件（CLI、blog、docs、无关 workflow）保持删除\n- `src/PKHeX.Everywhere.Engine.Sdk/packages/engine/src/generated/**` 不要手改，重新构建 CodeGen 覆盖\n- `package-lock.json` 用 `npm install --package-lock-only` 重新生成\n' "$(cat conflicts.txt)")
+          gh issue create --title "上游同步冲突 $(date -u +%F)" --body "$body"
+
+      - uses: actions/setup-dotnet@v4
+        if: steps.merge.outputs.conflict == 'false'
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        if: steps.merge.outputs.conflict == 'false'
+        with:
+          node-version: '22'
+
+      - name: Update submodules
+        if: steps.merge.outputs.conflict == 'false'
+        run: git submodule update --init --recursive
+
+      - name: Build the solution and regenerate the SDK
+        if: steps.merge.outputs.conflict == 'false'
+        run: dotnet build PKHeX.Web.sln
+
+      - name: Install Engine SDK dependencies
+        if: steps.merge.outputs.conflict == 'false'
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk
+        run: npm ci
+
+      - name: Build the Engine Vite plugin
+        if: steps.merge.outputs.conflict == 'false'
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk/packages/engine
+        run: npx vite build
+
+      - name: Install web dependencies
+        if: steps.merge.outputs.conflict == 'false'
+        working-directory: src/PKHeX.Web.React
+        run: npm ci
+
+      - name: Typecheck and test
+        if: steps.merge.outputs.conflict == 'false'
+        working-directory: src/PKHeX.Web.React
+        run: npm run typecheck && npm test
+
+      - name: Commit regenerated files
+        if: steps.merge.outputs.conflict == 'false'
+        run: |
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: regenerate engine TypeScript"
+
+      - name: Push and open pull request
+        if: steps.merge.outputs.conflict == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="${{ steps.merge.outputs.branch }}"
+          git push -u origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "chore: sync upstream $(date -u +%F)" \
+            --body "$(printf '合并 upstream/main 的日常同步。\n\n本 workflow 已执行：构建、CodeGen 重建、typecheck、单测。\n\n```\n%s\n```\n' "$(git log --oneline main..upstream/main | head -40)")"

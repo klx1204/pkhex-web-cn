@@ -4,20 +4,15 @@ import { Badge, Button, Descriptions, Dropdown, Flex, Space, type ButtonProps } 
 import type { SaveSummary } from '@pkhex-everywhere/engine'
 import { useEngine, useLoadedGame, useQuery } from '@pkhex-everywhere/react'
 import { gameName } from '../../capabilities'
-import { AdSlot } from '../../components/AdSlot'
 import { downloadFile, useNavigate } from '../../host'
 import { journey } from '../../layout/journey'
 import { routes } from '../../routes'
 import { FormatPickerModal } from './FormatPickerModal'
 import { LoadRomHackModal } from './LoadRomHackModal'
-import { PkhemuCard } from './PkhemuCard'
 import { SaveFileDrop } from './SaveFileDrop'
-import { cardGeneration } from './pkhemuInvite'
 import { showRomHacksBadge } from './romHacksBadge'
 import { useLoadSave } from './useLoadSave'
 
-const topAdSlot = '5784199745'
-const bottomAdSlot = '5148940774'
 const swordVersionId = 44
 
 export default function LoadPage() {
@@ -36,13 +31,11 @@ export default function LoadPage() {
   return (
     <SaveFileDrop onOpen={openFile}>
       <Flex vertical align="center" gap={20} style={{ width: '100%' }}>
-        <AdSlot slot={topAdSlot} format="horizontal" />
         {game ? (
           <LoadedGame key={`${game.fileName}|${game.version}|${game.format?.id}`} game={game} onOpen={openFilePicker} />
         ) : (
           <NoGame onOpen={openFilePicker} onDemo={openDemo} />
         )}
-        <AdSlot slot={bottomAdSlot} format="horizontal" />
         <input ref={fileInput} type="file" hidden onChange={loadFile} />
         {formatChoice && <FormatPickerModal choice={formatChoice} onChoose={chooseFormat} onCancel={cancelFormatChoice} />}
       </Flex>
@@ -57,7 +50,6 @@ function LoadedGame({ game, onOpen }: { game: SaveSummary; onOpen: () => void })
   const exportSave = async () => {
     const { bytes, fileName } = await engine.game.export()
     downloadFile(bytes, fileName)
-    setExported(true)
   }
 
   return (
@@ -76,7 +68,6 @@ function LoadedGame({ game, onOpen }: { game: SaveSummary; onOpen: () => void })
         <Button type="primary" icon={<ExportOutlined aria-hidden />} onClick={exportSave}>
           Export
         </Button>
-        {exported && <PkhemuCard generation={cardGeneration(game)} onClose={() => setExported(false)} />}
         <OpenButton label="Open new..." onOpen={onOpen} />
       </Flex>
     </>

@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/PKHeX.Web.React/package-lock.json
+
+      - name: Publish the engine
+        run: dotnet publish src/PKHeX.Everywhere.Engine.Host -c Release
+
+      - name: Install Engine SDK dependencies
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk
+        run: npm ci
+
+      - name: Build the Engine Vite plugin
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk/packages/engine
+        run: npx vite build
+
+      - name: Install web dependencies
+        working-directory: src/PKHeX.Web.React
+        run: npm ci
+
+      - name: Build the web app
+        working-directory: src/PKHeX.Web.React
+        env:
+          BASE_PATH: /pkhex-web-cn/
+        run: npm run build:web
+
+      - name: Disable Jekyll
+        working-directory: src/PKHeX.Web.React
+        run: touch dist/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: src/PKHeX.Web.React/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

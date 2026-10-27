@@ -1,179 +1,52 @@
-import { Button, Flex, Typography } from 'antd'
-import { Link } from 'react-router'
+import { Typography } from 'antd'
 import { applicationName, gitHubRepositoryIssues } from '../../constants'
-import { showCookiePreferences } from '../../host'
-import { routes } from '../../routes'
 
 export default function PrivacyPolicyPage() {
   return (
     <Typography>
-      <h1>Privacy Policy</h1>
-      <p>Effective Date: 03/10/2026</p>
+      <h1>隐私政策</h1>
+      <p>生效日期：2026-10-28</p>
 
-      <h2>1. Introduction</h2>
+      <h2>1. 概述</h2>
       <p>
-        Welcome to {applicationName}. This Privacy Policy explains how data is collected and used when you use this
-        application.
-      </p>
-
-      <h2>2. Information We Collect</h2>
-      <p>
-        We do not collect any personal information that identifies you as an individual. However, this application uses
-        Google Analytics to collect and process the following information:
-      </p>
-      <ul>
-        <li>Standard traffic data (e.g., browser type, operating system)</li>
-        <li>Pokémon species used in your party</li>
-        <li>Game version loaded</li>
-        <li>Items being edited</li>
-        <li>Species being edited</li>
-        <li>Usage telemetry of the app features (clicks, page visits)</li>
-      </ul>
-
-      <h2>3. How We Use Your Information</h2>
-      <p>The information collected is used for the following purposes:</p>
-      <ul>
-        <li>To analyze and improve the functionality of the app</li>
-        <li>To understand how users interact with the app</li>
-        <li>To ensure the app runs efficiently and effectively</li>
-        <li>
-          To build up the <Link to={routes.analytics}>analytics</Link> page of the app
-        </li>
-      </ul>
-
-      <h2>4. Google Analytics</h2>
-      <p>
-        We use Google Analytics to collect and analyze data about the use of our app. Google Analytics collects
-        information such as how often users visit the app, what pages they visit, and what other sites they used prior
-        to coming to the app. We use the information from Google Analytics only to improve our app. Google Analytics
-        collects only the IP address assigned to you on the date you visit the app, rather than your name or other
-        identifying information. We do not combine the information collected through Google Analytics with personally
-        identifiable information. You can learn more about how Google Analytics collects and processes data{' '}
-        <a href="https://policies.google.com/technologies/partner-sites" target="_blank">here</a> and more information
-        about Google Analytics privacy{' '}
-        <a
-          href="https://support.google.com/analytics/topic/2919631?hl=en&sjid=7301622311848926321-EU"
-          target="_blank"
-        >
-          here
-        </a>
-        .
+        {applicationName} 是一个在浏览器里运行的宝可梦存档编辑器。所有存档解析和编辑都在你的设备上完成，本应用没有后端服务器。
       </p>
 
-      <h2>5. Data Security</h2>
+      <h2>2. 存档文件</h2>
       <p>
-        We use reasonable administrative, technical, and physical measures to protect the information we collect
-        through our app. However, no security measures are perfect or impenetrable, and we cannot guarantee the security
-        of the collected data.
+        你打开或拖入的存档只在浏览器内存中解析，不会被上传。只有当你点击“导出”时，文件才会由浏览器下载到本地。关闭或刷新页面后，内存中的存档就会消失。
       </p>
 
-      <h2>6. Changes to This Privacy Policy</h2>
+      <h2>3. 本地存储</h2>
       <p>
-        This Privacy Policy may change from time to time. You will be notified of any changes, however, you are advised
-        to review this Privacy Policy periodically for any changes you may have missed. Changes to this Privacy Policy
-        are effective when they are posted on this page.
+        应用使用浏览器的 localStorage 和 IndexedDB 保存少量本机数据：主题、语言、伤害计算器地址、已安装插件及其缓存。这些数据不会离开你的设备，你可以通过清除本站的站点数据随时删除。
       </p>
 
-      <h2>7. Plugins</h2>
+      <h2>4. 我们不收集的数据</h2>
       <p>
-        The app supports the installation of plugins. It is advisable to use plugins from the "Default Source" for
-        security and compatibility reasons. We are not responsible for any third-party plugin use of the data or any
-        issues arising from the use of such plugins.
+        本分支不包含任何第三方统计、错误上报或广告脚本，也不会创建用于追踪的分析 Cookie。因此这里没有 Cookie 同意横幅，也没有需要你撤回的授权。
       </p>
 
-      <h2>8. Cookies, Advertising, and Third-Party Services</h2>
+      <h2>5. 插件</h2>
       <p>
-        Our application uses cookies and similar technologies to enhance your experience, understand usage patterns, and
-        serve advertisements. If you are in the European Economic Area, the United Kingdom or Switzerland, we ask for
-        your consent before setting advertising or analytics cookies. If you decline, Google still shows ads, but they
-        are not personalized and do not use advertising cookies. You can change your choice at any time with the Cookie
-        preferences button below.
+        你可以安装社区插件，插件同样在本地运行。第三方插件如何使用数据由插件作者决定，请只安装你信任的来源。
       </p>
-      <p>
-        <strong>Google AdSense & Advertising Cookies:</strong>
-      </p>
-      <ul>
-        <li>
-          Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website
-          or other websites.
-        </li>
-        <li>
-          Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to our
-          sites and/or other sites on the Internet.
-        </li>
-        <li>
-          These cookies help in providing personalized advertising, which means you might see ads that are more relevant
-          to your interests based on your browsing behavior.
-        </li>
-        <li>
-          You may opt out of personalized advertising from Google by visiting{' '}
-          <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
-            Google's Ads Settings
-          </a>
-          .
-        </li>
-      </ul>
-      <p>
-        <strong>Other Third-Party Vendors & Ad Networks:</strong>
-      </p>
-      <ul>
-        <li>
-          In addition to Google, other third-party vendors or ad networks may also serve ads on our application. These
-          vendors may use cookies to provide personalized advertising.
-        </li>
-        <li>
-          You can opt out of some third-party vendors’ uses of cookies for personalized advertising by visiting{' '}
-          <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
-            www.aboutads.info/choices/
-          </a>
-          .
-        </li>
-        <li>
-          Alternatively, you may be able to visit the websites of these third-party vendors to opt out of the use of
-          cookies for personalized advertising, if the vendor or ad network offers this capability.
-        </li>
-      </ul>
-      <p>
-        <strong>Google Analytics:</strong>
-      </p>
-      <ul>
-        <li>
-          We also use Google Analytics to collect anonymized usage data, helping us understand how our application is
-          used and how we can improve it. Google Analytics may use cookies to gather this information.
-        </li>
-      </ul>
-      <p>
-        <strong>Managing Cookies:</strong>
-      </p>
-      <ul>
-        <li>
-          Most browsers allow you to control cookies through their settings preferences. However, limiting the ability
-          of websites to set cookies may worsen your overall user experience.
-        </li>
-        <li>
-          For more information on how Google uses data when you use our partners' sites or apps, please visit{' '}
-          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
-            Google's Partner Sites Policy
-          </a>
-          . You can also review{' '}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
-            Google's Privacy Policy
-          </a>{' '}
-          and{' '}
-          <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">
-            Cookie Policy
-          </a>{' '}
-          for further details.
-        </li>
-      </ul>
-      <Flex justify="center">
-        <Button onClick={showCookiePreferences}>Cookie preferences</Button>
-      </Flex>
 
-      <h2>9. Contact Us</h2>
+      <h2>6. 外部链接</h2>
       <p>
-        If you have any questions about this Privacy Policy, please open an issue on{' '}
-        <a href={gitHubRepositoryIssues} target="_blank">GitHub</a>.
+        页面中包含指向 GitHub 等外部网站的链接。离开本站后，那些网站各自的隐私政策适用。
+      </p>
+
+      <h2>7. 政策变更</h2>
+      <p>如果本政策发生重大变化，我们会更新本页顶部的生效日期，并在更新日志中说明。</p>
+
+      <h2>8. 联系方式</h2>
+      <p>
+        如有疑问，请在{' '}
+        <a href={gitHubRepositoryIssues} target="_blank">
+          GitHub Issues
+        </a>{' '}
+        提问。
       </p>
     </Typography>
   )

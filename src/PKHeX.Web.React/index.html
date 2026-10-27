@@ -1,62 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="utf-8"/>
-    <script>
-        (function () {
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function () { dataLayer.push(arguments); };
-            gtag('consent', 'default', {
-                ad_storage: 'granted',
-                ad_user_data: 'granted',
-                ad_personalization: 'granted',
-                analytics_storage: 'granted'
-            });
-            gtag('consent', 'default', {
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                analytics_storage: 'denied',
-                region: ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT',
-                    'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO',
-                    'GB', 'CH'],
-                wait_for_update: 500
-            });
-
-            window.showGoogleCmpRevocationMessage = function () {
-                window.googlefc = window.googlefc || {};
-                googlefc.callbackQueue = googlefc.callbackQueue || [];
-                googlefc.callbackQueue.push(function () { googlefc.showRevocationMessage(); });
-            };
-
-            var adsense = document.createElement('script');
-            adsense.async = true;
-            adsense.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9295410730226031';
-            adsense.crossOrigin = 'anonymous';
-            document.head.appendChild(adsense);
-        })();
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <meta name="description"
-          content="PKHeX for Web: A versatile Pokémon save file editor that runs on Windows, Linux, MacOS, Steam Deck, or anywhere a browser is supported.">
-    <meta name="keywords" content="PKHeX, Pokémon, save file editor, cross-platform, Windows, Linux, MacOS, Steam Deck">
+          content="PKHeX Web 中文版：在浏览器里编辑宝可梦存档，支持从红绿到朱紫以及多款改版。存档只在本地解析，不上传，不修改服务器数据。"/>
+    <meta name="keywords" content="PKHeX, 宝可梦, 存档编辑器, 中文版, 浏览器, Pokémon, save editor"/>
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="PKHeX for Web - Run Anywhere">
+    <meta property="og:title" content="PKHeX Web 中文版"/>
     <meta property="og:description"
-          content="PKHeX for Web: A versatile Pokémon save file editor that runs on Windows, Linux, MacOS, Steam Deck, or anywhere a browser is supported.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="PKHeX for Web - Run Anywhere">
-    <meta name="twitter:description"
-          content="PKHeX for Web: A versatile Pokémon save file editor that runs on Windows, Linux, MacOS, Steam Deck, or anywhere a browser is supported.">
+          content="在浏览器里编辑宝可梦存档。存档只在本地解析，不上传。"/>
+    <meta name="og:type" content="website"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="PKHeX Web 中文版"/>
+    <meta name="twitter:description" content="在浏览器里编辑宝可梦存档。存档只在本地解析，不上传。"/>
+    <meta name="theme-color" content="#0b7a72"/>
 
-    <meta name="google-site-verification" content="qDneIvSGfSUZsP-IBpUOokImfEuMibae8VcukZpAskE" />
+    <title>PKHeX Web 中文版</title>
 
-    <title>PKHeX for Web</title>
-
-    <base href="/"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <!-- A GitHub Pages project site needs the repository name in every absolute URL. -->
+    <base href="%BASE_URL%"/>
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg"/>
 
     <!-- Restores the URL 404.html saved, before the router reads it. -->
     <script>
@@ -72,8 +38,8 @@
 
 <body>
     <div id="root">
-        <div class="loading-text">Loading...</div>
-        <h1 class="loading-text">PKHeX for Web - A Cross-Platform Pokémon Save File Editor</h1>
+        <div class="loading-text">正在加载…</div>
+        <h1 class="loading-text">PKHeX Web 中文版 - 浏览器里的宝可梦存档编辑器</h1>
     </div>
 
     <script type="module" src="/src/index.ts"></script>

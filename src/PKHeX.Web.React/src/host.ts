@@ -2,16 +2,14 @@ import { useCallback } from 'react'
 import { useNavigate as useRouterNavigate } from 'react-router'
 import { toBase64 } from './base64'
 import { createStore } from './externalStore'
+import { detectLocale, type Locale } from './i18n/locale'
 import { createSettings, type Theme } from './settings'
 
 export type { Theme } from './settings'
 
-declare global {
-  var showGoogleCmpRevocationMessage: (() => void) | undefined
-}
-
 export const settings = createSettings()
 const themeStore = createStore(settings.readTheme())
+const localeStore = createStore<Locale>(settings.readLocale() ?? detectLocale())
 const calculatorUrlStore = createStore(settings.readCalculatorUrl())
 
 export function useTheme(): Theme {
@@ -21,6 +19,15 @@ export function useTheme(): Theme {
 export function changeTheme(next: Theme) {
   settings.writeTheme(next)
   themeStore.set(next)
+}
+
+export function useLocale(): Locale {
+  return localeStore.use()
+}
+
+export function changeLocale(locale: Locale) {
+  settings.writeLocale(locale)
+  localeStore.set(settings.readLocale() ?? locale)
 }
 
 export function useCalculatorUrl(): string {
@@ -52,8 +59,4 @@ export function downloadFile(bytes: Uint8Array<ArrayBuffer>, fileName: string) {
   link.download = fileName
   link.click()
   setTimeout(() => URL.revokeObjectURL(url))
-}
-
-export function showCookiePreferences() {
-  globalThis.showGoogleCmpRevocationMessage?.()
 }

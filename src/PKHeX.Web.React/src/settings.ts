@@ -1,4 +1,5 @@
 import { smogon } from './calculators'
+import type { Locale } from './i18n/locale'
 
 export type Theme = 'light' | 'dark'
 
@@ -6,8 +7,7 @@ export type Theme = 'light' | 'dark'
 const themeKey = 'theme'
 const calculatorUrlKey = '__settings__#calculatorUrl'
 const lastDateNewsSeenKey = 'lastDateNewsSeen'
-const pkhemuPreviewKey = 'pkhemuClosedTest'
-const pkhemuCardDismissedKey = 'pkhemuCardDismissed'
+const localeKey = 'locale'
 
 export type Settings = ReturnType<typeof createSettings>
 
@@ -32,23 +32,18 @@ export function createSettings(storage: Storage = localStorage, prefersDark = pr
     writeCalculatorUrl(url: string | null) {
       write(calculatorUrlKey, url?.trim() ? url.replace(/\/$/, '') : null)
     },
+    readLocale(): Locale | null {
+      const locale = storage.getItem(localeKey)
+      return locale === 'zh-Hans' || locale === 'en' ? locale : null
+    },
+    writeLocale(locale: Locale) {
+      write(localeKey, locale)
+    },
     readLastDateNewsSeen(): string | null {
       return storage.getItem(lastDateNewsSeenKey)
     },
     writeLastDateNewsSeen(date: string | null) {
       write(lastDateNewsSeenKey, date)
-    },
-    readPkhemuPreview(): boolean {
-      return storage.getItem(pkhemuPreviewKey) === 'true'
-    },
-    writePkhemuPreview(on: boolean) {
-      write(pkhemuPreviewKey, on ? 'true' : null)
-    },
-    readPkhemuCardDismissed(): boolean {
-      return storage.getItem(pkhemuCardDismissedKey) === 'true'
-    },
-    writePkhemuCardDismissed() {
-      write(pkhemuCardDismissedKey, 'true')
     },
   }
 }

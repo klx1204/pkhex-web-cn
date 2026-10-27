@@ -10,10 +10,11 @@ import {
   ShopOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
-import { Button, Layout, Menu, type MenuProps } from 'antd'
+import { Button, Layout, Menu, Space, type MenuProps } from 'antd'
 import { Link, useLocation } from 'react-router'
 import { useLoadedGame, useQuery } from '@pkhex-everywhere/react'
-import { useNavigate } from '../host'
+import { changeLocale, useLocale, useNavigate } from '../host'
+import { useT } from '../i18n'
 import { routes } from '../routes'
 import { Footer } from './Footer'
 import { RoutedContent } from './RoutedContent'
@@ -33,24 +34,38 @@ const icons: Record<MenuIcon, ReactNode> = {
 
 type MenuItem = Required<MenuProps>['items'][number]
 
-function toMenuItem({ route, label, icon, children }: MenuEntry): MenuItem {
-  if (children) return { key: `${route}#group`, icon: icon && icons[icon], label, children: children.map(toMenuItem) }
-  return { key: route, icon: icon && icons[icon], label: <Link to={route}>{label}</Link> }
+function toMenuItem({ route, label, icon, children }: MenuEntry, t: (text: string) => string): MenuItem {
+  if (children) {
+    return {
+      key: `${route}#group`,
+      icon: icon && icons[icon],
+      label: t(label),
+      children: children.map((child) => toMenuItem(child, t)),
+    }
+  }
+  return { key: route, icon: icon && icons[icon], label: <Link to={route}>{t(label)}</Link> }
 }
 
 function SideMenu() {
   const { pathname } = useLocation()
   const { game } = useLoadedGame()
   const installed = useQuery('plugins.installed')
+  const t = useT()
 
   return (
-    <Menu theme="dark" mode="inline" selectedKeys={[pathname]} items={menuEntries(game, installed).map(toMenuItem)} />
+    <Menu
+      theme="dark"
+      mode="inline"
+      selectedKeys={[pathname]}
+      items={menuEntries(game, installed).map((entry) => toMenuItem(entry, t))}
+    />
   )
 }
 
 export function MainLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const locale = useLocale()
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -61,7 +76,9 @@ export function MainLayout() {
         collapsedWidth={64}
         style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'auto' }}
       >
-        <div style={{ color: 'white', marginTop: 10, padding: 16, textAlign: 'center' }}>PKHeX.Web</div>
+        <div style={{ color: 'white', marginTop: 10, padding: 16, textAlign: 'center' }}>
+          {locale === 'zh-Hans' ? 'PKHeX Web 中文版' : 'PKHeX Web CN'}
+        </div>
         <Suspense fallback={null}>
           <SideMenu />
         </Suspense>
@@ -69,13 +86,18 @@ export function MainLayout() {
       <Layout>
         <Layout.Header style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <div style={{ flexGrow: 1 }} />
-          <Button
-            icon={<SettingOutlined />}
-            size="large"
-            shape="round"
-            aria-label="Settings"
-            onClick={() => navigate(routes.settings)}
-          />
+          <Space>
+            <Button size="large" onClick={() => changeLocale(locale === 'zh-Hans' ? 'en' : 'zh-Hans')}>
+              {locale === 'zh-Hans' ? 'EN' : '中文'}
+            </Button>
+            <Button
+              icon={<SettingOutlined />}
+              size="large"
+              shape="round"
+              aria-label="Settings"
+              onClick={() => navigate(routes.settings)}
+            />
+          </Space>
         </Layout.Header>
         <Layout.Content style={{ margin: '24px 16px 0' }}>
           <div style={{ padding: 24, minHeight: 360 }}>

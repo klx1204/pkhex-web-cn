@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { App, Descriptions, Flex, Input, InputNumber, Space, Typography } from 'antd'
 import { EngineError } from '@pkhex-everywhere/engine'
 import { useLoadedGame, useQuery, useTrainer } from '@pkhex-everywhere/react'
-import { AdSlot } from '../../components/AdSlot'
 import { PlugInActionButton } from '../../components/PlugInActionButton'
 import { TrainerGenderRadio } from '../../components/TrainerGenderRadio'
 
-const multiplexAdSlot = '7470710144'
 const maxMoney = 999_999
 const maxBattlePoints = 65_535
 
@@ -16,7 +14,6 @@ export default function HomePage() {
   return (
     <Flex vertical gap={20} style={{ width: '100%' }}>
       {game && <TrainerCard />}
-      <AdSlot slot={multiplexAdSlot} format="autorelaxed" />
       <QuickActions />
     </Flex>
   )

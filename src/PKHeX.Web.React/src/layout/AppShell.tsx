@@ -1,11 +1,18 @@
 import { useCallback, useEffect, type ReactNode } from 'react'
-import { App, ConfigProvider, theme as antdTheme } from 'antd'
+import { App, ConfigProvider } from 'antd'
+import enUS from 'antd/locale/en_US'
+import zhCN from 'antd/locale/zh_CN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import { BrowserRouter, Navigate, Route, Routes, useParams, useSearchParams } from 'react-router'
 import type { EngineError, PageLayout, SaveCapability } from '@pkhex-everywhere/engine'
 import { EngineProvider, RequireGame, useLoadedGame } from '@pkhex-everywhere/react'
 import { engine, plugIns } from '../app'
+import { applicationName, applicationNameEn } from '../constants'
 import { useSupports } from '../hooks/useSupports'
-import { useTheme } from '../host'
+import { I18nProvider, useI18n, useT } from '../i18n'
+import { changeLocale, useLocale, useTheme } from '../host'
+import { antdThemeFor, cssVariables } from '../theme'
 import { PlugInsProvider } from '../plugins/PlugInsContext'
 import AnalyticsPage from '../pages/analytics/AnalyticsPage'
 import BoxPage from '../pages/box/BoxPage'
@@ -36,17 +43,18 @@ import { MainLayout } from './MainLayout'
 import { PlugInOutcomes } from './PlugInOutcomes'
 import { PlugInUpdateNotice } from './PlugInUpdateNotice'
 
-const fontFamily = `'Pokemon GB', "Lucida Console", sans-serif`
-
 function useTitle(title: string | undefined) {
+  const locale = useLocale()
+  const t = useT()
+  const appName = locale === 'zh-Hans' ? applicationName : applicationNameEn
   useEffect(() => {
     if (!title) return
     const previous = document.title
-    document.title = title
+    document.title = `${t(title)} · ${appName}`
     return () => {
       document.title = previous
     }
-  }, [title])
+  }, [title, t, appName])
 }
 
 interface PageProps {
@@ -154,12 +162,17 @@ function AppRoutes({ autoLoad }: { autoLoad: boolean }) {
   )
 }
 
-function PageBackground() {
-  const { token } = antdTheme.useToken()
+function ThemeVariables() {
+  const mode = useTheme()
   useEffect(() => {
-    document.documentElement.style.background = token.colorBgLayout
-    document.body.style.background = token.colorBgLayout
-  }, [token.colorBgLayout])
+    const vars = cssVariables(mode)
+    for (const [name, value] of Object.entries(vars)) {
+      document.documentElement.style.setProperty(name, value)
+    }
+    document.documentElement.style.background = vars['--pkm-bg']
+    document.body.style.background = vars['--pkm-bg']
+    document.documentElement.style.colorScheme = mode
+  }, [mode])
   return null
 }
 
@@ -178,27 +191,30 @@ function NotifyingEngineProvider({ children }: { children: ReactNode }) {
 
 export function AppShell({ autoLoad }: { autoLoad: boolean }) {
   const theme = useTheme()
+  const locale = useLocale()
+
+  useEffect(() => {
+    document.documentElement.lang = locale === 'zh-Hans' ? 'zh-CN' : 'en'
+    dayjs.locale(locale === 'zh-Hans' ? 'zh-cn' : 'en')
+  }, [locale])
 
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-        token: { fontFamily },
-      }}
-    >
-      <PageBackground />
-      <App component={false}>
-        <NotifyingEngineProvider>
-          <PlugInsProvider value={plugIns}>
-            <BrowserRouter>
-              <GameJourney />
-              <PlugInOutcomes />
-              <PlugInUpdateNotice />
-              <AppRoutes autoLoad={autoLoad} />
-            </BrowserRouter>
-          </PlugInsProvider>
-        </NotifyingEngineProvider>
-      </App>
+    <ConfigProvider locale={locale === 'zh-Hans' ? zhCN : enUS} theme={antdThemeFor(theme)}>
+      <ThemeVariables />
+      <I18nProvider locale={locale} setLocale={changeLocale}>
+        <App component={false}>
+          <NotifyingEngineProvider>
+            <PlugInsProvider value={plugIns}>
+              <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+                <GameJourney />
+                <PlugInOutcomes />
+                <PlugInUpdateNotice />
+                <AppRoutes autoLoad={autoLoad} />
+              </BrowserRouter>
+            </PlugInsProvider>
+          </NotifyingEngineProvider>
+        </App>
+      </I18nProvider>
     </ConfigProvider>
   )
 }

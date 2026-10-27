@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/PKHeX.Web.React/package-lock.json
+
+      - name: Publish the engine
+        run: dotnet publish src/PKHeX.Everywhere.Engine.Host -c Release
+
+      - name: Install Engine SDK dependencies
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk
+        run: npm ci
+
+      - name: Build the Engine Vite plugin
+        working-directory: src/PKHeX.Everywhere.Engine.Sdk/packages/engine
+        run: npx vite build
+
+      - name: Install web dependencies
+        working-directory: src/PKHeX.Web.React
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: src/PKHeX.Web.React
+        run: npm run typecheck
+
+      - name: Test
+        working-directory: src/PKHeX.Web.React
+        run: npm test
+
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build PKHeX.Web.sln
+
+      - name: Check generated engine TypeScript
+        run: |
+          changes=$(git status --porcelain -- src/PKHeX.Everywhere.Engine.Sdk)
+          if [ -n "$changes" ]; then
+            echo "$changes"
+            git diff -- src/PKHeX.Everywhere.Engine.Sdk
+            echo "::error::Generated engine TypeScript is out of date. Build PKHeX.Everywhere.Engine.CodeGen and commit the changes."
+            exit 1
+          fi
+
+      - name: Test
+        run: dotnet test PKHeX.Web.sln --no-build --verbosity normal --filter Category!=E2E

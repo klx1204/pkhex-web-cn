@@ -1,0 +1,20 @@
+PKHeX Web 中文版
+================
+
+本项目是 PKHeX.Everywhere（https://github.com/arleypadua/PKHeX.Everywhere）的非官方中文分支，
+依据 GNU General Public License v3.0 or later 发布，完整许可证见 LICENSE。
+
+上游版权归其作者所有。本项目与 PKHeX、PKHeX.Everywhere 的官方维护者无隶属关系，也未获得其背书。
+
+自 2026-10-28 起，本分支对上游做了以下修改：
+
+- 删除命令行版本、博客、SDK 文档与 npm/NuGet 发布流程，仅保留 Web 应用
+- 移除 Google AdSense、Google Analytics 和 Sentry
+- 新增简体中文界面、中英文切换与中文游戏名称本地化
+- 本地化合法性报告
+- 重新设计界面主题与布局
+- 适配 GitHub Pages 项目子路径部署（/pkhex-web-cn/）
+- 重写隐私政策以反映无广告、无第三方统计的实现
+
+本分支的源码同样以 GPL-3.0-or-later 提供，可从
+https://github.com/klx1204/pkhex-web-cn 获取。

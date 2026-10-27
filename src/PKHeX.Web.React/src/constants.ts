@@ -1,5 +1,5 @@
-export const applicationName = 'PKHeX.Web'
-export const gitHubRepository = 'https://github.com/arleypadua/PKHeX.Everywhere'
+export const applicationName = 'PKHeX Web 中文版'
+export const applicationNameEn = 'PKHeX Web CN'
+export const upstreamRepository = 'https://github.com/arleypadua/PKHeX.Everywhere'
+export const gitHubRepository = 'https://github.com/klx1204/pkhex-web-cn'
 export const gitHubRepositoryIssues = `${gitHubRepository}/issues`
-export const adSenseClient = 'ca-pub-9295410730226031'
-export const sdkDocs = 'https://docs.pkhex-everywhere.fyi'

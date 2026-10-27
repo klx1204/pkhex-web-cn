@@ -1,10 +1,19 @@
-@font-face {
-    font-family: 'Pokemon GB';
-    src: url("/font/pkmgb.ttf");
+:root {
+    --pkm-bg: #f6f5f2;
+    --pkm-card: #ffffff;
+    --pkm-line: #e2e0da;
+    --pkm-text: #22211f;
+    --pkm-muted: #78746d;
+    --pkm-accent: #0b7a72;
+    --pkm-accent-strong: #09655e;
+    --pkm-accent-soft: #e2f2f0;
+    --pkm-radius: 14px;
+    --pkm-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 html, body {
-    font-family: 'Pokemon GB', "Lucida Console", sans-serif;
+    font-family: var(--pkm-font);
 }
 
 #root {
@@ -13,11 +22,30 @@ html, body {
 
 .loading-text {
     font-size: 15px;
-    color: slategrey;
+    color: var(--pkm-muted);
     text-align: center;
     width: 100%;
 }
 
 code {
     color: #c02d76;
+}
+
+/* Cards keep the calm, bordered look of the reference design on every page. */
+.ant-card {
+    border-radius: var(--pkm-radius);
+}
+
+.ant-table-wrapper .ant-table {
+    border-radius: 10px;
+}
+
+.ant-layout-header {
+    border-bottom: 1px solid var(--pkm-line);
+}
+
+@media (max-width: 768px) {
+    .ant-layout-content {
+        margin: 12px 8px 0 !important;
+    }
 }
