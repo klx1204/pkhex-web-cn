@@ -13,10 +13,12 @@ import { boxActions } from './boxActions'
 import { boxColumns } from './boxColumns'
 import { TransferModal } from './TransferModal'
 import { useLoadPokemonFile } from './useLoadPokemonFile'
+import { useT } from '../../i18n'
 
 const selectionKey = (pokemon: PokemonSummary) => `${pokemon.id}@${JSON.stringify(pokemon.at)}`
 
 export default function BoxPage() {
+  const t = useT()
   const { box } = useBox()
   const { game } = useLoadedGame()
   const engine = useEngine()
@@ -56,7 +58,7 @@ export default function BoxPage() {
   return (
     <Flex vertical gap={20}>
       <PageHeader
-        title="Box"
+        title={t('Box')}
         extra={
           <>
             <ButtonOrMenu
@@ -69,6 +71,7 @@ export default function BoxPage() {
                   showdown: copyBoxShowdown,
                   transfer: () => setTransferring(true),
                 },
+                t,
               )}
             />
             <input ref={fileInput} type="file" hidden onChange={loadFile} />
@@ -77,7 +80,7 @@ export default function BoxPage() {
       />
       <PokemonTable
         pokemon={box}
-        extraColumns={boxColumns}
+        extraColumns={boxColumns(t)}
         selected={selected}
         onSelectedChange={(rows) => setSelectedKeys(rows.map(selectionKey))}
       />

@@ -3,8 +3,10 @@ import { Modal, Select } from 'antd'
 import { useQuery } from '@pkhex-everywhere/react'
 import { SaveFileDrop } from './SaveFileDrop'
 import { useLoadSave } from './useLoadSave'
+import { useT } from '../../i18n'
 
 export function LoadRomHackModal({ onClose }: { onClose: () => void }) {
+  const t = useT()
   const formats = useQuery('game.formats')
   const { openFile } = useLoadSave()
   const [formatId, setFormatId] = useState<string>()
@@ -24,7 +26,7 @@ export function LoadRomHackModal({ onClose }: { onClose: () => void }) {
     <Modal
       open
       title="Load ROM Hack"
-      okText="Open save file..."
+      okText={t('Open save file...')}
       onOk={() => fileInput.current?.click()}
       onCancel={onClose}
       okButtonProps={{ disabled: !formatId }}
@@ -32,8 +34,8 @@ export function LoadRomHackModal({ onClose }: { onClose: () => void }) {
     >
       <Select
         showSearch={{ optionFilterProp: 'label' }}
-        placeholder="Search ROM hacks"
-        aria-label="ROM hack"
+        placeholder={t('Search ROM hacks')}
+        aria-label={t('ROM hack')}
         options={formats.map((format) => ({ value: format.id, label: format.name }))}
         value={formatId}
         onChange={setFormatId}

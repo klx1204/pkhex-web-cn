@@ -1,6 +1,6 @@
 import { Button, Table, type TableColumnsType } from 'antd'
 import type { OwnedItem } from '@pkhex-everywhere/engine'
-import { useT } from '../i18n'
+import { useGameNames, useT } from '../i18n'
 import { ItemIcon } from './ItemIcon'
 import { NumberFilter } from './filters/NumberFilter'
 import { containsText } from './filters/containsText'
@@ -13,6 +13,7 @@ interface ItemsTableProps {
 
 export function ItemsTable({ items, onEdit }: ItemsTableProps) {
   const t = useT()
+  const gameNames = useGameNames()
   const columns: TableColumnsType<OwnedItem> = [
     {
       key: 'icon',
@@ -22,9 +23,10 @@ export function ItemsTable({ items, onEdit }: ItemsTableProps) {
     {
       title: t('Name'),
       dataIndex: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => gameNames.item(a.name).localeCompare(gameNames.item(b.name)),
       filterDropdown: (props) => <TextFilter {...props} placeholder={t('Name')} />,
-      onFilter: (value, item) => containsText(item.name, value),
+      onFilter: (value, item) => containsText(gameNames.item(item.name), value) || containsText(item.name, value),
+      render: (_, item) => gameNames.item(item.name),
     },
     {
       title: t('Amount'),

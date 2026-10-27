@@ -55,7 +55,7 @@ export function MetConditionsTab() {
             label: t('Level'),
             children: (
               <InputNumber
-                aria-label="Met Level"
+                aria-label={t('Met Level')}
                 min={0}
                 max={100}
                 value={details.metLevel}
@@ -81,7 +81,7 @@ export function MetConditionsTab() {
             label: t('Date'),
             children: (
               <DatePicker
-                aria-label="Met Date"
+                aria-label={t('Met Date')}
                 format="DD/MM/YYYY"
                 allowClear={false}
                 value={dayjs(details.metDate)}

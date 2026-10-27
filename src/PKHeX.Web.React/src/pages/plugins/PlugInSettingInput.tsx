@@ -3,6 +3,7 @@ import { CloseOutlined } from '@ant-design/icons'
 import { App, Button, Input, InputNumber, Space, Switch } from 'antd'
 import type { PlugInSetting } from '@pkhex-everywhere/engine'
 import { toBase64 } from '../../base64'
+import { useT } from '../../i18n'
 
 const maxFileSize = 24 * 1024 * 1000
 
@@ -51,6 +52,7 @@ export function PlugInSettingInput({ setting, onChange }: PlugInSettingInputProp
 }
 
 function FileSettingInput({ setting, onChange }: PlugInSettingInputProps) {
+  const t = useT()
   const fileInput = useRef<HTMLInputElement>(null)
   const { notification } = App.useApp()
 
@@ -74,7 +76,7 @@ function FileSettingInput({ setting, onChange }: PlugInSettingInputProps) {
             type="link"
             danger
             icon={<CloseOutlined />}
-            aria-label={`Remove ${setting.fileName}`}
+            aria-label={t('Remove {name}', { name: setting.fileName })}
             onClick={() => void onChange({ ...setting, fileName: '', file: null })}
           />
         )}
@@ -84,7 +86,7 @@ function FileSettingInput({ setting, onChange }: PlugInSettingInputProps) {
   return (
     <>
       <Button type="link" disabled={setting.readOnly} onClick={() => fileInput.current?.click()}>
-        Upload
+        {t('Upload')}
       </Button>
       <input ref={fileInput} type="file" hidden onChange={(event) => void upload(event)} />
     </>

@@ -5,8 +5,10 @@ import { useQuery } from '@pkhex-everywhere/react'
 import { ChoiceSelect } from './ChoiceSelect'
 import { moveChoices } from './moveChoices'
 import { useDraft } from './useDraft'
+import { useT } from '../../i18n'
 
 export function MovesTab() {
+  const t = useT()
   const { details, submit } = useDraft()
   const options = useQuery('pokemon.options', draftHandle)
   const allMoves = useQuery('game.moves')
@@ -21,7 +23,7 @@ export function MovesTab() {
   return (
     <Flex vertical gap={20}>
       <Checkbox checked={showAllMoves} onChange={(event) => setShowAllMoves(event.target.checked)}>
-        Show all moves
+        {t('Show all moves')}
       </Checkbox>
       {details.moves.map((slot, index) => (
         <Descriptions

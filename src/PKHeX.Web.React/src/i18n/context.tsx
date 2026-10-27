@@ -11,6 +11,14 @@ export type Values = Record<string, string | number | undefined>
 // upstream adds strings we have not translated yet.
 const tables: Record<Locale, Messages> = { 'zh-Hans': zhHans, en: {} }
 
+// Class components and error boundaries cannot use hooks, so they read the active
+// locale through tGlobal() instead.
+let activeLocale: Locale = 'en'
+
+export function tGlobal(key: string, values?: Values): string {
+  return translate(tables[activeLocale], key, values)
+}
+
 interface I18nValue {
   locale: Locale
   setLocale: (locale: Locale) => void
@@ -26,6 +34,7 @@ interface I18nProviderProps {
 }
 
 export function I18nProvider({ locale, setLocale, children }: I18nProviderProps) {
+  activeLocale = locale
   const value = useMemo<I18nValue>(
     () => ({ locale, setLocale, t: (key, values) => translate(tables[locale], key, values) }),
     [locale, setLocale],

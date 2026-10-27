@@ -10,7 +10,7 @@ const handlers = {
 }
 
 const labels = (supports: { encounters: boolean; showdown: boolean }) =>
-  boxActions(supports, handlers).map((action) => action.label)
+  boxActions(supports, handlers, (key) => key).map((action) => action.label)
 
 describe('boxActions', () => {
   it('ends with Transfer', () => {
@@ -22,7 +22,7 @@ describe('boxActions', () => {
   })
 
   it('opens the transfer from Transfer', () => {
-    boxActions({ encounters: true, showdown: true }, handlers).at(-1)!.onClick()
+    boxActions({ encounters: true, showdown: true }, handlers, (key) => key).at(-1)!.onClick()
 
     expect(handlers.transfer).toHaveBeenCalled()
   })

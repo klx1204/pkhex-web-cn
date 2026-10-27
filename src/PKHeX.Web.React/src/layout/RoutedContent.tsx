@@ -4,6 +4,7 @@ import { Outlet } from 'react-router'
 import { useEngineStatus } from '@pkhex-everywhere/react'
 import { engine } from '../app'
 import { applicationName } from '../constants'
+import { useT } from '../i18n'
 import { RoutedErrorBoundary } from './RoutedErrorBoundary'
 import { WhenPlugInsLoaded } from './WhenPlugInsLoaded'
 
@@ -23,21 +24,22 @@ export function RoutedContent() {
 }
 
 function BootFailed() {
+  const t = useT()
   if (typeof WebAssembly === 'undefined')
     return (
       <Alert
         type="error"
-        title={`${applicationName} couldn't start`}
-        description="This browser has WebAssembly turned off, and the app needs it. Turn it on or open the page in another browser."
+        title={t(`{app} couldn't start`, { app: applicationName })}
+        description={t('This browser has WebAssembly turned off, and the app needs it. Turn it on or open the page in another browser.')}
       />
     )
 
   return (
     <Alert
       type="error"
-      title={`${applicationName} couldn't start`}
-      description="Part of the app didn't download. Check your connection, then reload the page."
-      action={<Button onClick={() => location.reload()}>Reload</Button>}
+      title={t(`{app} couldn't start`, { app: applicationName })}
+      description={t("Part of the app didn't download. Check your connection, then reload the page.")}
+      action={<Button onClick={() => location.reload()}>{t('Reload')}</Button>}
     />
   )
 }

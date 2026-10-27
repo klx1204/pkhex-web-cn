@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { EllipsisOutlined } from '@ant-design/icons'
 import { Button, Dropdown, Space, type ButtonProps } from 'antd'
+import { useT } from '../i18n'
 
 export interface ButtonOrMenuAction {
   key: string
@@ -16,6 +17,7 @@ interface ButtonOrMenuProps {
 }
 
 export function ButtonOrMenu({ actions }: ButtonOrMenuProps) {
+  const t = useT()
   if (actions.length === 0) return null
   const [main, ...rest] = actions
   const mainButton = (
@@ -40,7 +42,7 @@ export function ButtonOrMenu({ actions }: ButtonOrMenuProps) {
           })),
         }}
       >
-        <Button type={main.type} icon={<EllipsisOutlined />} aria-label="More actions" />
+        <Button type={main.type} icon={<EllipsisOutlined />} aria-label={t('More actions')} />
       </Dropdown>
     </Space.Compact>
   )

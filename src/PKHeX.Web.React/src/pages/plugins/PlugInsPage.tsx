@@ -6,16 +6,17 @@ import { PageHeader } from '../../components/PageHeader'
 import { containsText } from '../../components/filters/containsText'
 import { TextFilter } from '../../components/filters/TextFilter'
 import { useNavigate } from '../../host'
+import { useT } from '../../i18n'
 import type { AvailablePlugIn } from '../../plugins/plugIns'
 import { useInstalledPlugIns, usePlugIns } from '../../plugins/PlugInsContext'
 import { routes } from '../../routes'
 
-function nameColumn<T extends { name: string }>(render: (plugIn: T) => ReactNode): TableColumnsType<T>[number] {
+function nameColumn<T extends { name: string }>(t: (key: string) => string, render: (plugIn: T) => ReactNode): TableColumnsType<T>[number] {
   return {
-    title: 'Name',
+    title: t('Name'),
     key: 'name',
     sorter: (a, b) => a.name.localeCompare(b.name),
-    filterDropdown: (props) => <TextFilter {...props} placeholder="Name" />,
+    filterDropdown: (props) => <TextFilter {...props} placeholder={t('Name')} />,
     onFilter: (value, plugIn) => containsText(plugIn.name, value),
     render: (_, plugIn) => render(plugIn),
   }
@@ -28,6 +29,7 @@ export default function PlugInsPage() {
   const { notification } = App.useApp()
   const [available, setAvailable] = useState<AvailablePlugIn[] | 'failed'>([])
   const [busy, setBusy] = useState<string>()
+  const t = useT()
 
   useEffect(() => {
     let active = true
@@ -49,7 +51,7 @@ export default function PlugInsPage() {
       return await call()
     } catch (error) {
       console.error(error)
-      notification.error({ title: failure, description: 'Try again later.' })
+      notification.error({ title: t(failure), description: t('Try again later.') })
       return undefined
     } finally {
       setBusy(undefined)
@@ -61,45 +63,45 @@ export default function PlugInsPage() {
   async function install(plugIn: AvailablePlugIn) {
     const id = await reachingTheSource(plugIn.id, () => plugIns.install(plugIn.sourceUrl, plugIn.id))
     if (!id) return
-    notification.success({ title: 'Plug-in installed' })
+    notification.success({ title: t('Plug-in installed') })
     await navigate(routes.plugIn(id))
   }
 
   async function update(id: string) {
-    if (await reachingTheSource(id, () => plugIns.update(id))) notification.success({ title: 'Plug-in updated' })
+    if (await reachingTheSource(id, () => plugIns.update(id))) notification.success({ title: t('Plug-in updated') })
   }
 
   const uninstall = (id: string) => whileBusy(id, "Couldn't uninstall the plug-in", () => plugIns.uninstall(id))
 
   const installedColumns: TableColumnsType<InstalledPlugIn> = [
-    nameColumn((plugIn) => (plugIn.needsReinstall ? plugIn.id : <Link to={routes.plugIn(plugIn.id)}>{plugIn.name}</Link>)),
+    nameColumn(t, (plugIn) => (plugIn.needsReinstall ? plugIn.id : <Link to={routes.plugIn(plugIn.id)}>{plugIn.name}</Link>)),
     {
-      title: 'Version',
+      title: t('Version'),
       key: 'version',
       render: (_, plugIn) =>
         plugIn.needsReinstall ? (
-          <Tooltip title="This plug-in can't run in this version of the app. Uninstall it and install it again.">
-            <Tag color="warning">Needs reinstall</Tag>
+          <Tooltip title={t("This plug-in can't run in this version of the app. Uninstall it and install it again.")}>
+            <Tag color="warning">{t('Needs reinstall')}</Tag>
           </Tooltip>
         ) : (
           <Space>
             {plugIn.version}
-            {plugIn.hasNewerVersion && <Tag color="processing">Update available</Tag>}
+            {plugIn.hasNewerVersion && <Tag color="processing">{t('Update available')}</Tag>}
           </Space>
         ),
     },
     {
-      title: 'Actions',
+      title: t('Actions'),
       key: 'actions',
       render: (_, plugIn) => (
         <Space>
           {plugIn.hasNewerVersion && !plugIn.needsReinstall && (
             <Button type="link" disabled={!!busy} loading={busy === plugIn.id} onClick={() => void update(plugIn.id)}>
-              Update
+              {t('Update')}
             </Button>
           )}
           <Button type="link" danger disabled={!!busy} onClick={() => void uninstall(plugIn.id)}>
-            Uninstall
+            {t('Uninstall')}
           </Button>
         </Space>
       ),
@@ -107,7 +109,7 @@ export default function PlugInsPage() {
   ]
 
   const availableColumns: TableColumnsType<AvailablePlugIn> = [
-    nameColumn((plugIn) =>
+    nameColumn(t, (plugIn) =>
       plugIn.projectUrl ? (
         <a href={plugIn.projectUrl} target="_blank" rel="noopener noreferrer">
           {plugIn.name}
@@ -116,15 +118,15 @@ export default function PlugInsPage() {
         plugIn.name
       ),
     ),
-    { title: 'Description', dataIndex: 'description' },
-    { title: 'Version', dataIndex: 'version' },
-    { title: 'Source', dataIndex: 'sourceName', sorter: (a, b) => a.sourceName.localeCompare(b.sourceName) },
+    { title: t('Description'), dataIndex: 'description' },
+    { title: t('Version'), dataIndex: 'version' },
+    { title: t('Source'), dataIndex: 'sourceName', sorter: (a, b) => a.sourceName.localeCompare(b.sourceName) },
     {
-      title: 'Actions',
+      title: t('Actions'),
       key: 'actions',
       render: (_, plugIn) => (
         <Button type="link" disabled={!!busy} loading={busy === plugIn.id} onClick={() => void install(plugIn)}>
-          Install
+          {t('Install')}
         </Button>
       ),
     },
@@ -132,10 +134,10 @@ export default function PlugInsPage() {
 
   return (
     <Flex vertical gap={20}>
-      <PageHeader title="Manage Plug-Ins" />
+      <PageHeader title={t('Manage Plug-Ins')} />
       {installed.length > 0 && (
         <>
-          <Typography.Title level={5}>Installed</Typography.Title>
+          <Typography.Title level={5}>{t('Installed')}</Typography.Title>
           <Table
             rowKey="id"
             dataSource={installed}
@@ -147,11 +149,11 @@ export default function PlugInsPage() {
         </>
       )}
       {available === 'failed' ? (
-        <Alert type="warning" title="Couldn't reach the plug-in sources. Try again later." showIcon />
+        <Alert type="warning" title={t("Couldn't reach the plug-in sources. Try again later.")} showIcon />
       ) : (
         available.length > 0 && (
           <>
-            <Typography.Title level={5}>Discover</Typography.Title>
+            <Typography.Title level={5}>{t('Discover')}</Typography.Title>
             <Table
               rowKey={(plugIn) => `${plugIn.sourceUrl}#${plugIn.id}`}
               dataSource={available}

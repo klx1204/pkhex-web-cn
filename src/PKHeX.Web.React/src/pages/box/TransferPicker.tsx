@@ -15,6 +15,7 @@ import { downloadFile } from '../../host'
 import { boxColumns } from './boxColumns'
 import { describeChange, refusalReasons } from './transferLabels'
 import { transferPick } from './transferPick'
+import { useT } from '../../i18n'
 
 type View = 'party' | 'box'
 
@@ -46,6 +47,7 @@ function previewColumn(preview: TransferPreview | undefined): TableColumnsType<P
 }
 
 export function TransferPicker({ transfer, onClose }: { transfer: TransferSummary; onClose: () => Promise<void> }) {
+  const t = useT()
   const engine = useEngine()
   const { notification } = App.useApp()
   const [view, setView] = useState<View>('party')
@@ -146,7 +148,7 @@ export function TransferPicker({ transfer, onClose }: { transfer: TransferSummar
         <div style={{ maxHeight: '55vh', overflowY: 'auto' }}>
           <PokemonTable
             pokemon={shown}
-            extraColumns={[...(view === 'box' ? boxColumns : []), previewColumn(preview)]}
+            extraColumns={[...(view === 'box' ? boxColumns(t) : []), previewColumn(preview)]}
             actions={false}
             selected={picked}
             onSelectedChange={changePicked}

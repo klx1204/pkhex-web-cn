@@ -8,8 +8,10 @@ import { SaveFileDrop } from '../load/SaveFileDrop'
 import type { FormatChoice } from '../load/useLoadSave'
 import { openTransfer } from './openTransfer'
 import { TransferPicker } from './TransferPicker'
+import { useT } from '../../i18n'
 
 export function TransferModal({ game, onClose }: { game: SaveSummary; onClose: () => void }) {
+  const t = useT()
   const engine = useEngine()
   const { notification } = App.useApp()
   const [formatChoice, setFormatChoice] = useState<FormatChoice>()
@@ -49,8 +51,8 @@ export function TransferModal({ game, onClose }: { game: SaveSummary; onClose: (
     <>
       <Modal
         open
-        title="Transfer"
-        okText="Open save file..."
+        title={t('Transfer')}
+        okText={t('Open save file...')}
         onOk={() => fileInput.current?.click()}
         onCancel={close}
         modalRender={(content) => <SaveFileDrop onOpen={openSave}>{content}</SaveFileDrop>}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Select, Space } from 'antd'
+import { useGameNames, useT } from '../i18n'
 import { ItemIcon } from './ItemIcon'
 
 interface Item {
@@ -18,22 +19,36 @@ interface ItemSelectProps<T extends Item> {
   onChange: (item: T) => void
 }
 
-export function ItemSelect<T extends Item>({ items, label, value, placeholder = 'Select an item', onChange }: ItemSelectProps<T>) {
+export function ItemSelect<T extends Item>({ items, label, value, placeholder, onChange }: ItemSelectProps<T>) {
   const [search, setSearch] = useState('')
+  const t = useT()
+  const gameNames = useGameNames()
 
   return (
-    <Select<number, { value: number; label: string; icon: boolean }>
+    <Select<number, { value: number; label: string; english: string; icon: boolean }>
       value={value}
       aria-label={label}
-      placeholder={placeholder}
+      placeholder={placeholder ?? t('Select an item')}
       style={{ width: '100%' }}
-      showSearch={{ searchValue: search, onSearch: setSearch, optionFilterProp: 'label' }}
+      showSearch={{ searchValue: search, onSearch: setSearch }}
+      filterOption={(input, option) => {
+        const query = input.trim().toLowerCase()
+        if (!option) return false
+        return !query || option.label.toLowerCase().includes(query) || option.english.toLowerCase().includes(query)
+      }}
       virtual
-      options={items.map((item) => ({ value: item.id, label: item.name, icon: hasIcon(item) }))}
-      optionRender={({ data }) => <ItemOption icon={data.icon} name={data.label} />}
-      labelRender={({ value, label }) => (
-        <ItemOption icon={items.some((item) => item.id === Number(value) && hasIcon(item))} name={String(label)} />
-      )}
+      options={items.map((item) => ({ value: item.id, label: gameNames.item(item.name), english: item.name, icon: hasIcon(item) }))}
+      optionRender={({ data }) => <ItemOption icon={data.icon} name={data.label} sprite={data.english} />}
+      labelRender={({ value }) => {
+        const item = items.find((entry) => entry.id === Number(value))
+        return (
+          <ItemOption
+            icon={!!item && hasIcon(item)}
+            name={item ? gameNames.item(item.name) : String(value)}
+            sprite={item?.name ?? ''}
+          />
+        )
+      }}
       onSelect={() => setSearch('')}
       onChange={(id) => {
         const item = items.find((item) => item.id === id)
@@ -43,10 +58,10 @@ export function ItemSelect<T extends Item>({ items, label, value, placeholder = 
   )
 }
 
-function ItemOption({ icon, name }: { icon: boolean; name: string }) {
+function ItemOption({ icon, name, sprite }: { icon: boolean; name: string; sprite?: string }) {
   return (
     <Space size={5}>
-      {icon && <ItemIcon name={name} />}
+      {icon && <ItemIcon name={sprite ?? name} />}
       <span>{name}</span>
     </Space>
   )

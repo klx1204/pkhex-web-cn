@@ -1,6 +1,7 @@
 import { Component, type ReactNode } from 'react'
 import { Alert, Descriptions, Typography } from 'antd'
 import type { Engine, SaveVersion } from '@pkhex-everywhere/engine'
+import { tGlobal } from '../i18n'
 import { issueLink, reportPageError, toPageError, type PageError } from './pageError'
 
 interface Props {
@@ -52,19 +53,19 @@ export class RoutedErrorBoundary extends Component<Props, State> {
     return (
       <Alert
         type="error"
-        title="Error"
-        closable={{ closeIcon: 'Dismiss', onClose: this.dismiss }}
+        title={tGlobal('Error')}
+        closable={{ closeIcon: tGlobal('Dismiss'), onClose: this.dismiss }}
         description={
           <>
             <Typography.Paragraph>
               {error.unsupportedFormat
-                ? 'This Pokémon format is not compatible with the currently loaded save file yet. Support for this workflow is on the roadmap.'
-                : 'Something went wrong on this page.'}
+                ? tGlobal('This Pokémon format is not compatible with the currently loaded save file yet. Support for this workflow is on the roadmap.')
+                : tGlobal('Something went wrong on this page.')}
             </Typography.Paragraph>
             {link && (
               <Typography.Paragraph>
                 <a href={link} target="_blank" rel="noreferrer">
-                  File an issue on GitHub
+                  {tGlobal('File an issue on GitHub')}
                 </a>
               </Typography.Paragraph>
             )}
@@ -73,9 +74,9 @@ export class RoutedErrorBoundary extends Component<Props, State> {
               size="small"
               column={{ xs: 1, md: 3 }}
               items={[
-                { key: 'id', label: 'Id', children: error.id },
-                { key: 'type', label: 'Type', children: error.type },
-                { key: 'message', label: 'Message', children: error.message },
+                { key: 'id', label: tGlobal('Id'), children: error.id },
+                { key: 'type', label: tGlobal('Type'), children: error.type },
+                { key: 'message', label: tGlobal('Message'), children: error.message },
               ]}
             />
           </>

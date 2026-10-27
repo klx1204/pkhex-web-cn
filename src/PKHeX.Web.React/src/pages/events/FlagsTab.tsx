@@ -4,8 +4,10 @@ import type { EventFlag, SaveEvents } from '@pkhex-everywhere/engine'
 import { useEvents, useQuery } from '@pkhex-everywhere/react'
 import { humanize, useEventFilters } from './useEventFilters'
 import { useEventEdit } from './useEventEdit'
+import { useT } from '../../i18n'
 
 export function FlagsTab({ events }: { events: SaveEvents }) {
+  const t = useT()
   const { setFlag } = useEvents()
   const edit = useEventEdit()
   const { filtered, filters } = useEventFilters(events.flags)
@@ -13,7 +15,7 @@ export function FlagsTab({ events }: { events: SaveEvents }) {
 
   const columns: TableColumnsType<EventFlag> = [
     {
-      title: 'Set',
+      title: t('Set'),
       key: 'value',
       width: 60,
       render: (_, flag) => (
@@ -21,8 +23,8 @@ export function FlagsTab({ events }: { events: SaveEvents }) {
       ),
     },
     { title: '#', dataIndex: 'index', width: 80 },
-    { title: 'Name', dataIndex: 'name' },
-    { title: 'Category', dataIndex: 'category', render: humanize },
+    { title: t('Name'), dataIndex: 'name' },
+    { title: t('Category'), dataIndex: 'category', render: humanize },
   ]
 
   return (
@@ -36,7 +38,7 @@ export function FlagsTab({ events }: { events: SaveEvents }) {
         scroll={{ x: 'max-content' }}
         pagination={{ defaultPageSize: 20 }}
       />
-      <Card size="small" title="Edit by index">
+      <Card size="small" title={t('Edit by index')}>
         <Space align="center">
           <InputNumber<number> min={0} max={events.flagCount - 1} precision={0} value={index} onChange={setIndex} />
           {index !== null && (
@@ -51,13 +53,14 @@ export function FlagsTab({ events }: { events: SaveEvents }) {
 }
 
 function FlagAt({ index }: { index: number }) {
+  const t = useT()
   const value = useQuery('events.flag', index)
   const { setFlag } = useEvents()
   const edit = useEventEdit()
 
   return (
     <Checkbox checked={value} onChange={(e) => edit(() => setFlag(index, e.target.checked))}>
-      Set
+      {t('Set')}
     </Checkbox>
   )
 }

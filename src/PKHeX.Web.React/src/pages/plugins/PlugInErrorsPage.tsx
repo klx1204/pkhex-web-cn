@@ -1,15 +1,17 @@
 import { Alert, Button, Descriptions, Empty, Flex, Typography } from 'antd'
 import { useEngine, useQuery } from '@pkhex-everywhere/react'
 import { PageHeader } from '../../components/PageHeader'
+import { useT } from '../../i18n'
 
 export default function PlugInErrorsPage() {
+  const t = useT()
   const engine = useEngine()
   const failures = useQuery('plugins.failures')
 
   return (
     <Flex vertical gap={20}>
-      <PageHeader title="Plug-in errors" />
-      {failures.length === 0 && <Empty description="No plug-in errors" />}
+      <PageHeader title={t('Plug-in errors')} />
+      {failures.length === 0 && <Empty description={t('No plug-in errors')} />}
       {failures.map((failure) => (
         <Alert
           key={failure.id}

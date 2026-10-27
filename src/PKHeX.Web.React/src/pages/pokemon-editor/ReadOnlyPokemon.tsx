@@ -5,12 +5,14 @@ import { useEngine, usePokemon, usePokemonDetails, useQuery } from '@pkhex-every
 import { PageHeader } from '../../components/PageHeader'
 import { PokemonImage } from '../../components/PokemonImage'
 import { downloadFile } from '../../host'
+import { useT } from '../../i18n'
 
 interface ReadOnlyPokemonProps {
   at: PokemonHandle
 }
 
 export function ReadOnlyPokemon({ at }: ReadOnlyPokemonProps) {
+  const t = useT()
   const engine = useEngine()
   const { pokemon } = usePokemon(at)
   const { details } = usePokemonDetails(at)
@@ -52,7 +54,7 @@ export function ReadOnlyPokemon({ at }: ReadOnlyPokemonProps) {
   return (
     <Flex vertical gap={20}>
       <PageHeader title="Pokemon" extra={<PokemonImage pokemon={pokemon} />} />
-      <Alert type="info" showIcon title="This Pokémon's species is unknown, so it can't be edited." />
+      <Alert type="info" showIcon title={t("This Pokémon's species is unknown, so it can't be edited.")} />
       <Descriptions
         bordered
         size="small"
@@ -61,7 +63,7 @@ export function ReadOnlyPokemon({ at }: ReadOnlyPokemonProps) {
         items={items}
       />
       <Flex justify="end">
-        <Button onClick={() => void exportFile()}>Export *.pk</Button>
+        <Button onClick={() => void exportFile()}>{t('Export *.pk')}</Button>
       </Flex>
     </Flex>
   )

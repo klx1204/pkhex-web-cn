@@ -4,8 +4,10 @@ import { PageHeader } from '../../components/PageHeader'
 import { FlagsTab } from './FlagsTab'
 import { TicketsTab } from './TicketsTab'
 import { WorkTab } from './WorkTab'
+import { useT } from '../../i18n'
 
 export default function EventsPage() {
+  const t = useT()
   const { events } = useEvents()
 
   return (
@@ -14,7 +16,7 @@ export default function EventsPage() {
       <Alert
         type="warning"
         showIcon
-        title="Changing event flags can break story progression. Keep a backup of your save."
+        title={t("Changing event flags can break story progression. Keep a backup of your save.")}
       />
       {events ? (
         <Tabs
@@ -25,7 +27,7 @@ export default function EventsPage() {
           ]}
         />
       ) : (
-        <Empty description="This save has no event labels to edit." />
+        <Empty description={t('This save has no event labels to edit.')} />
       )}
     </Flex>
   )

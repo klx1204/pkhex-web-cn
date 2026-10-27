@@ -2,8 +2,10 @@ import { Button, Card, Checkbox, Flex, Typography, App } from 'antd'
 import { EngineError, type TicketsAndIslands } from '@pkhex-everywhere/engine'
 import { useEvents } from '@pkhex-everywhere/react'
 import { useEventEdit } from './useEventEdit'
+import { useT } from '../../i18n'
 
 export function TicketsTab({ gen3 }: { gen3: TicketsAndIslands }) {
+  const t = useT()
   const { giveTickets, setFlag } = useEvents()
   const { message, modal } = App.useApp()
   const edit = useEventEdit()
@@ -30,18 +32,18 @@ export function TicketsTab({ gen3 }: { gen3: TicketsAndIslands }) {
 
   return (
     <Flex vertical gap={16}>
-      <Card size="small" title="Tickets">
+      <Card size="small" title={t('Tickets')}>
         <Flex vertical gap={12}>
           <Typography.Paragraph style={{ margin: 0 }}>Adds {gen3.tickets.join(', ')} to Key Items.</Typography.Paragraph>
           <div>
             <Button type="primary" disabled={!gen3.anyTicketMissing} onClick={give}>
-              Give tickets
+              {t('Give tickets')}
             </Button>
           </div>
         </Flex>
       </Card>
       {gen3.islands.length > 0 && (
-        <Card size="small" title="Islands">
+        <Card size="small" title={t('Islands')}>
           <Flex vertical gap={8}>
             {gen3.islands.map((island) => (
               <Checkbox

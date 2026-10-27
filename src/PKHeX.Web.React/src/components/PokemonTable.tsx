@@ -1,6 +1,6 @@
 import { Table, type TableColumnsType } from 'antd'
 import type { PokemonSummary } from '@pkhex-everywhere/engine'
-import { useT } from '../i18n'
+import { useGameNames, useT } from '../i18n'
 import { PokemonActions } from './PokemonActions'
 import { PokemonSprite } from './PokemonSprite'
 import { NumberFilter } from './filters/NumberFilter'
@@ -9,7 +9,7 @@ import { TextFilter } from './filters/TextFilter'
 
 type Translate = (key: string) => string
 
-const leadingColumns = (t: Translate): TableColumnsType<PokemonSummary> => [
+const leadingColumns = (t: Translate, speciesName: (name: string) => string): TableColumnsType<PokemonSummary> => [
   {
     key: 'sprite',
     width: 80,
@@ -18,9 +18,10 @@ const leadingColumns = (t: Translate): TableColumnsType<PokemonSummary> => [
   {
     title: t('Name'),
     dataIndex: 'species',
-    sorter: (a, b) => a.species.localeCompare(b.species),
+    sorter: (a, b) => speciesName(a.species).localeCompare(speciesName(b.species)),
     filterDropdown: (props) => <TextFilter {...props} placeholder={t('Name')} />,
-    onFilter: (value, pokemon) => containsText(pokemon.species, value),
+    onFilter: (value, pokemon) => containsText(speciesName(pokemon.species), value) || containsText(pokemon.species, value),
+    render: (_, pokemon) => speciesName(pokemon.species),
   },
   {
     title: t('Level'),
@@ -49,11 +50,12 @@ interface PokemonTableProps {
 
 export function PokemonTable({ pokemon, extraColumns = [], actions = true, selected = [], onSelectedChange }: PokemonTableProps) {
   const t = useT()
+  const gameNames = useGameNames()
   return (
     <Table<PokemonSummary>
       rowKey={rowKey}
       dataSource={pokemon}
-      columns={[...leadingColumns(t), ...extraColumns, ...(actions ? [actionColumn(t)] : [])]}
+      columns={[...leadingColumns(t, gameNames.species), ...extraColumns, ...(actions ? [actionColumn(t)] : [])]}
       rowSelection={
         onSelectedChange && {
           selectedRowKeys: selected.map(rowKey),

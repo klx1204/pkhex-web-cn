@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useI18n } from './index'
+import { useI18n } from './context'
 import tables from './names/zh-Hans.json'
 
 type Names = Record<string, string>

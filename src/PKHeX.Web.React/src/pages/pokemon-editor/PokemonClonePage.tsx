@@ -6,6 +6,7 @@ import { useNavigate } from '../../host'
 import { routes } from '../../routes'
 import { DraftEditor } from './DraftEditor'
 import { editorView } from './editorView'
+import { useT } from '../../i18n'
 
 interface PokemonClonePageProps {
   source?: string
@@ -13,6 +14,7 @@ interface PokemonClonePageProps {
 }
 
 export default function PokemonClonePage({ source, id }: PokemonClonePageProps) {
+  const t = useT()
   const { party } = useParty()
   const { box } = useBox()
   const engine = useEngine()
@@ -44,13 +46,13 @@ export default function PokemonClonePage({ source, id }: PokemonClonePageProps) 
     } catch (error) {
       setPhase('editing')
       if (!(error instanceof EngineError)) throw error
-      notification.error({ title: "Couldn't add the clone", description: error.message })
+      notification.error({ title: t("Couldn't add the clone"), description: error.message })
     }
   }
 
   if (phase === 'adding') return <Spin />
-  if (!saved) return <Result status="404" title="Pokémon not found" />
-  if (editorView(saved) === 'read-only') return <Result status="warning" title="This Pokémon's species is unknown, so it can't be cloned." />
+  if (!saved) return <Result status="404" title={t('Pokémon not found')} />
+  if (editorView(saved) === 'read-only') return <Result status="warning" title={t("This Pokémon's species is unknown, so it can't be cloned.")} />
   if (phase === 'opening') return <Spin />
   return (
     <DraftEditor

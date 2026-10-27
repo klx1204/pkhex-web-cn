@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Modal, Radio, Typography } from 'antd'
 import type { FormatChoice } from './useLoadSave'
+import { useT } from '../../i18n'
 
 const pkhexFormatId = 'pkhex'
 
@@ -11,13 +12,14 @@ interface FormatPickerModalProps {
 }
 
 export function FormatPickerModal({ choice, onChoose, onCancel }: FormatPickerModalProps) {
+  const t = useT()
   const [formatId, setFormatId] = useState<string>()
 
   return (
     <Modal
       open
-      title="Is this save from a ROM hack?"
-      okText="Open"
+      title={t('Is this save from a ROM hack?')}
+      okText={t('Open')}
       onOk={() => formatId && onChoose(formatId)}
       onCancel={onCancel}
       okButtonProps={{ disabled: !formatId }}
@@ -29,12 +31,12 @@ export function FormatPickerModal({ choice, onChoose, onCancel }: FormatPickerMo
       </Typography.Paragraph>
       <Radio.Group
         vertical
-        aria-label="Game"
+        aria-label={t('Game')}
         value={formatId}
         onChange={(event) => setFormatId(event.target.value as string)}
         options={[
           ...choice.candidates.map((format) => ({ value: format.id, label: format.name })),
-          ...(choice.pkhexGame ? [{ value: pkhexFormatId, label: `No, it's ${choice.pkhexGame}` }] : []),
+          ...(choice.pkhexGame ? [{ value: pkhexFormatId, label: t("No, it's {game}", { game: choice.pkhexGame }) }] : []),
         ]}
       />
     </Modal>

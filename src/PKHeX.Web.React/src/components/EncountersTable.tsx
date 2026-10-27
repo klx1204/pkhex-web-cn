@@ -5,6 +5,7 @@ import { PokemonSprite } from './PokemonSprite'
 import { NumberFilter } from './filters/NumberFilter'
 import { containsText } from './filters/containsText'
 import { TextFilter } from './filters/TextFilter'
+import { useT } from '../i18n'
 
 const levels = (encounter: EncounterRow) => encounter.levelRange.split('-').map(Number)
 
@@ -15,6 +16,7 @@ interface EncountersTableProps {
 }
 
 export function EncountersTable({ encounters, adding, onAdd }: EncountersTableProps) {
+  const t = useT()
   const columns: TableColumnsType<EncounterRow> = [
     {
       key: 'sprite',
@@ -29,10 +31,10 @@ export function EncountersTable({ encounters, adding, onAdd }: EncountersTablePr
       onFilter: (value, encounter) => containsText(encounter.species, value),
     },
     {
-      title: 'Encounter',
+      title: t('Encounter'),
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-      filterDropdown: (props) => <TextFilter {...props} placeholder="Encounter" />,
+      filterDropdown: (props) => <TextFilter {...props} placeholder={t('Encounter')} />,
       onFilter: (value, encounter) => containsText(encounter.name, value),
     },
     {
@@ -76,7 +78,7 @@ export function EncountersTable({ encounters, adding, onAdd }: EncountersTablePr
           disabled={adding !== undefined}
           onClick={() => onAdd(encounter)}
         >
-          Add to box
+          {t('Add to box')}
         </Button>
       ),
     },

@@ -4,11 +4,13 @@ import type { CatalogName } from '@pkhex-everywhere/engine'
 import { useQuery } from '@pkhex-everywhere/react'
 import { fetchAnalyticsResults, type AnalyticsResults, type Counted } from './analytics'
 import type { TreemapData } from './charts'
+import { useGameNames, useT } from '../../i18n'
 
 const PieChart = lazy(() => import('./charts').then((charts) => ({ default: charts.PieChart })))
 const TreemapChart = lazy(() => import('./charts').then((charts) => ({ default: charts.TreemapChart })))
 
 export default function AnalyticsPage() {
+  const t = useT()
   const [results, setResults] = useState<AnalyticsResults | 'failed'>()
 
   useEffect(() => {
@@ -24,18 +26,18 @@ export default function AnalyticsPage() {
 
   if (results === undefined) return <Spin />
   if (results === 'failed')
-    return <Alert type="error" title="Couldn't load analytics results. Try again later." showIcon />
+    return <Alert type="error" title={t("Couldn't load analytics results. Try again later.")} showIcon />
 
   return (
     <Flex vertical gap={20} style={{ width: '100%' }}>
       <ChartDeck>
         {results.byCountry.length > 0 && (
-          <ChartCard title="Edits by country">
+          <ChartCard title={t('Edits by country')}>
             <PieChart data={results.byCountry} />
           </ChartCard>
         )}
         {results.byVersion.length > 0 && (
-          <ChartCard title="Edits by version">
+          <ChartCard title={t('Edits by version')}>
             <PieChart data={results.byVersion} />
           </ChartCard>
         )}
@@ -48,22 +50,24 @@ export default function AnalyticsPage() {
 }
 
 function NamedTreemaps({ species, items }: { species: Counted[]; items: Counted[] }) {
+  const t = useT()
+  const gameNames = useGameNames()
   const names = useQuery('catalog.names', {
     speciesIds: species.map((entry) => entry.id),
     itemIds: items.map((entry) => entry.id),
   })
-  const speciesData = treemapData(species, names.species)
-  const itemsData = treemapData(items, names.items)
+  const speciesData = treemapData(species, names.species, gameNames.species)
+  const itemsData = treemapData(items, names.items, gameNames.item)
 
   return (
     <ChartDeck>
       {speciesData.children.length > 0 && (
-        <ChartCard title="Species changed">
+        <ChartCard title={t('Species changed')}>
           <TreemapChart data={speciesData} />
         </ChartCard>
       )}
       {itemsData.children.length > 0 && (
-        <ChartCard title="Items changed">
+        <ChartCard title={t('Items changed')}>
           <TreemapChart data={itemsData} />
         </ChartCard>
       )}
@@ -71,11 +75,11 @@ function NamedTreemaps({ species, items }: { species: Counted[]; items: Counted[
   )
 }
 
-function treemapData(counts: Counted[], names: CatalogName[]): TreemapData {
+function treemapData(counts: Counted[], names: CatalogName[], translate: (name: string) => string): TreemapData {
   const nameById = new Map(names.map((entry) => [entry.id, entry.name]))
   const children = counts.flatMap(({ id, count }) => {
     const name = nameById.get(id)
-    return name === undefined ? [] : [{ name, value: count }]
+    return name === undefined ? [] : [{ name: translate(name), value: count }]
   })
   return { name: 'root', value: children.reduce((sum, child) => sum + child.value, 0), children }
 }

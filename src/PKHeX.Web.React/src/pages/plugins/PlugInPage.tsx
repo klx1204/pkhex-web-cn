@@ -9,22 +9,24 @@ import { TextFilter } from '../../components/filters/TextFilter'
 import { usePlugIns } from '../../plugins/PlugInsContext'
 import { routes } from '../../routes'
 import { PlugInSettingInput } from './PlugInSettingInput'
+import { useT } from '../../i18n'
 
 interface PlugInPageProps {
   id?: string
 }
 
 export default function PlugInPage({ id }: PlugInPageProps) {
+  const t = useT()
   const installed = useQuery('plugins.installed').find((plugIn) => plugIn.id === id)
 
   if (!id || !installed || installed.needsReinstall)
     return (
       <Result
         status="404"
-        title="Plug-in not installed"
+        title={t('Plug-in not installed')}
         extra={
           <Link to={routes.plugIns}>
-            <Button type="primary">Manage plug-ins</Button>
+            <Button type="primary">{t('Manage plug-ins')}</Button>
           </Link>
         }
       />
@@ -34,6 +36,7 @@ export default function PlugInPage({ id }: PlugInPageProps) {
 }
 
 function InstalledPlugIn({ id }: { id: string }) {
+  const t = useT()
   const plugIn = useQuery('plugins.details', id)
   const plugIns = usePlugIns()
   const { notification } = App.useApp()
@@ -44,17 +47,17 @@ function InstalledPlugIn({ id }: { id: string }) {
       await call()
     } catch (error) {
       console.error(error)
-      notification.error({ title: "Couldn't save the plug-in", description: error instanceof Error ? error.message : undefined })
+      notification.error({ title: t("Couldn't save the plug-in"), description: error instanceof Error ? error.message : undefined })
     }
   }
 
   async function update() {
     setUpdating(true)
     try {
-      if (await plugIns.update(id)) notification.success({ title: 'Plug-in updated' })
+      if (await plugIns.update(id)) notification.success({ title: t('Plug-in updated') })
     } catch (error) {
       console.error(error)
-      notification.error({ title: "Couldn't reach the plug-in source", description: 'Try again later.' })
+      notification.error({ title: t("Couldn't reach the plug-in source"), description: t('Try again later.') })
     } finally {
       setUpdating(false)
     }
@@ -64,14 +67,14 @@ function InstalledPlugIn({ id }: { id: string }) {
 
   const hookColumns: TableColumnsType<PlugInHook> = [
     {
-      title: 'Description',
+      title: t('Description'),
       dataIndex: 'description',
       sorter: (a, b) => a.description.localeCompare(b.description),
-      filterDropdown: (props) => <TextFilter {...props} placeholder="Description" />,
+      filterDropdown: (props) => <TextFilter {...props} placeholder={t('Description')} />,
       onFilter: (value, hook) => containsText(hook.description, value),
     },
     {
-      title: 'Enabled',
+      title: t('Enabled'),
       key: 'enabled',
       render: (_, hook) => (
         <Switch
@@ -90,7 +93,7 @@ function InstalledPlugIn({ id }: { id: string }) {
         extra={
           plugIn.hasNewerVersion && (
             <Button type="primary" loading={updating} onClick={() => void update()}>
-              Update
+              {t('Update')}
             </Button>
           )
         }
@@ -100,24 +103,24 @@ function InstalledPlugIn({ id }: { id: string }) {
         size="small"
         column={1}
         items={[
-          { key: 'name', label: 'Name', children: <ProjectLink plugIn={plugIn} /> },
-          { key: 'description', label: 'Description', children: plugIn.description },
+          { key: 'name', label: t('Name'), children: <ProjectLink plugIn={plugIn} /> },
+          { key: 'description', label: t('Description'), children: plugIn.description },
           {
             key: 'version',
-            label: 'Version',
+            label: t('Version'),
             children: (
               <Space>
                 {plugIn.version}
-                {plugIn.hasNewerVersion && <Tag color="processing">Update available</Tag>}
+                {plugIn.hasNewerVersion && <Tag color="processing">{t('Update available')}</Tag>}
               </Space>
             ),
           },
           {
             key: 'enabled',
-            label: 'Enabled',
+            label: t('Enabled'),
             children: <Switch checked={plugIn.enabled} onChange={(enabled) => void save(() => plugIns.setEnabled(id, enabled))} />,
           },
-          ...(plugIn.publicKeyToken ? [{ key: 'publicKey', label: 'Public Key', children: plugIn.publicKeyToken }] : []),
+          ...(plugIn.publicKeyToken ? [{ key: 'publicKey', label: t('Public Key'), children: plugIn.publicKeyToken }] : []),
           ...plugIn.settings.map((setting) => ({
             key: `setting:${setting.key}`,
             label: setting.key,

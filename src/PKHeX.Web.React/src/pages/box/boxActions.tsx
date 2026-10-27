@@ -14,16 +14,17 @@ interface BoxActionHandlers {
 export function boxActions(
   supports: { encounters: boolean; showdown: boolean },
   handlers: BoxActionHandlers,
+  t: (key: string) => string,
 ): ButtonOrMenuAction[] {
   return [
-    ...(supports.encounters ? [{ key: 'add', label: 'Add', type: 'primary' as const, onClick: handlers.add }] : []),
-    { key: 'load', label: 'Load *.pk', icon: <FolderOpenOutlined />, onClick: handlers.load },
+    ...(supports.encounters ? [{ key: 'add', label: t('Add'), type: 'primary' as const, onClick: handlers.add }] : []),
+    { key: 'load', label: t('Load *.pk'), icon: <FolderOpenOutlined />, onClick: handlers.load },
     ...(supports.showdown
       ? [
-          { key: 'calculator', label: 'Calculator', icon: <CalculatorOutlined />, onClick: handlers.calculator },
+          { key: 'calculator', label: t('Calculator'), icon: <CalculatorOutlined />, onClick: handlers.calculator },
           { key: 'showdown', label: 'Showdown', icon: <CopyOutlined />, onClick: handlers.showdown },
         ]
       : []),
-    { key: 'transfer', label: 'Transfer', icon: <SwapOutlined />, onClick: handlers.transfer },
+    { key: 'transfer', label: t('Transfer'), icon: <SwapOutlined />, onClick: handlers.transfer },
   ]
 }

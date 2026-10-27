@@ -7,8 +7,10 @@ import { ItemsTable } from '../../components/ItemsTable'
 import { PageHeader } from '../../components/PageHeader'
 import { AddItemModal } from './AddItemModal'
 import { EditItemModal } from './EditItemModal'
+import { useT } from '../../i18n'
 
 export default function ItemsPage() {
+  const t = useT()
   const { inventory } = useInventory()
   const [activeKey, setActiveKey] = useState<string>()
   const [editing, setEditing] = useState<ItemHandle>()
@@ -25,7 +27,7 @@ export default function ItemsPage() {
         title="Items"
         extra={
           <Button type="primary" icon={<PlusOutlined />} disabled={!active} onClick={() => setAddingTo(active?.name)}>
-            Add
+            {t('Add')}
           </Button>
         }
       />
