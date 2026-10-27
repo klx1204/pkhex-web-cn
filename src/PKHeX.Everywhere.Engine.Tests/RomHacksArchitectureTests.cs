@@ -51,9 +51,9 @@ public class RomHacksArchitectureTests
     private static string RepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "PKHeX.CLI.sln")))
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "global.json")))
             directory = directory.Parent;
 
-        return directory?.FullName ?? throw new DirectoryNotFoundException("PKHeX.CLI.sln not found above the test output.");
+        return directory?.FullName ?? throw new DirectoryNotFoundException("global.json not found above the test output.");
     }
 }
