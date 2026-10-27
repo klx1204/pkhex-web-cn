@@ -3,6 +3,7 @@ import { EllipsisOutlined, ExportOutlined, FolderOpenOutlined } from '@ant-desig
 import { Badge, Button, Descriptions, Dropdown, Flex, Space, type ButtonProps } from 'antd'
 import type { SaveSummary } from '@pkhex-everywhere/engine'
 import { useEngine, useLoadedGame, useQuery } from '@pkhex-everywhere/react'
+import { useT } from '../../i18n'
 import { gameName } from '../../capabilities'
 import { downloadFile, useNavigate } from '../../host'
 import { journey } from '../../layout/journey'
@@ -45,6 +46,7 @@ export default function LoadPage() {
 
 function LoadedGame({ game, onOpen }: { game: SaveSummary; onOpen: () => void }) {
   const engine = useEngine()
+  const t = useT()
   const [exported, setExported] = useState(false)
 
   const exportSave = async () => {
@@ -55,20 +57,20 @@ function LoadedGame({ game, onOpen }: { game: SaveSummary; onOpen: () => void })
   return (
     <>
       <Descriptions
-        title="Loaded Game"
+        title={t('Loaded Game')}
         bordered
         size="small"
         style={{ width: '100%' }}
         items={[
-          { key: 'file', label: 'File', children: game.fileName },
-          { key: 'version', label: 'Version', children: gameName(game) },
+          { key: 'file', label: t('File'), children: game.fileName },
+          { key: 'version', label: t('Version'), children: gameName(game) },
         ]}
       />
       <Flex vertical gap={20} style={{ width: '100%', maxWidth: 300 }}>
         <Button type="primary" icon={<ExportOutlined aria-hidden />} onClick={exportSave}>
-          Export
+          {t('Export')}
         </Button>
-        <OpenButton label="Open new..." onOpen={onOpen} />
+        <OpenButton label={t('Open new...')} onOpen={onOpen} />
       </Flex>
     </>
   )
@@ -76,6 +78,7 @@ function LoadedGame({ game, onOpen }: { game: SaveSummary; onOpen: () => void })
 
 function NoGame({ onOpen, onDemo }: { onOpen: () => void; onDemo: () => void }) {
   const engine = useEngine()
+  const t = useT()
   const navigate = useNavigate()
   const goHome = () => {
     journey.reachedHome()
@@ -86,12 +89,12 @@ function NoGame({ onOpen, onDemo }: { onOpen: () => void; onDemo: () => void }) 
   return (
     <Flex vertical align="center" gap={20} style={{ width: '100%', maxWidth: 300 }}>
       <Button style={{ minWidth: 150 }} onClick={goHome}>
-        Home
+        {t('Home')}
       </Button>
-      <OpenButton label="Open" type="primary" style={{ minWidth: 150 }} onOpen={onOpen} />
+      <OpenButton label={t('Open')} type="primary" style={{ minWidth: 150 }} onOpen={onOpen} />
       <Space.Compact style={{ minWidth: 150 }}>
         <Button style={{ flexGrow: 1 }} onClick={() => engine.game.loadBlank(swordVersionId)}>
-          Empty
+          {t('Empty')}
         </Button>
         <Dropdown
           trigger={['click']}
@@ -101,11 +104,11 @@ function NoGame({ onOpen, onDemo }: { onOpen: () => void; onDemo: () => void }) 
             style: { maxHeight: 250, overflowY: 'auto' },
           }}
         >
-          <Button icon={<EllipsisOutlined />} aria-label="Empty save versions" />
+          <Button icon={<EllipsisOutlined />} aria-label={t('Empty save versions')} />
         </Dropdown>
       </Space.Compact>
       <Button style={{ minWidth: 150 }} onClick={onDemo}>
-        Demo
+        {t('Demo')}
       </Button>
     </Flex>
   )
@@ -120,6 +123,7 @@ interface OpenButtonProps {
 
 function OpenButton({ label, type, style, onOpen }: OpenButtonProps) {
   const [loadingRomHack, setLoadingRomHack] = useState(false)
+  const t = useT()
 
   const buttons = (
     <Space.Compact style={style}>
@@ -130,13 +134,13 @@ function OpenButton({ label, type, style, onOpen }: OpenButtonProps) {
         trigger={['click']}
         menu={{
           items: [
-            { key: 'open', label: 'Open save file' },
-            { key: 'romHack', label: 'Load ROM Hack' },
+            { key: 'open', label: t('Open save file') },
+            { key: 'romHack', label: t('Load ROM Hack') },
           ],
           onClick: ({ key }) => (key === 'romHack' ? setLoadingRomHack(true) : onOpen()),
         }}
       >
-        <Button type={type} icon={<EllipsisOutlined />} aria-label="More ways to open" />
+        <Button type={type} icon={<EllipsisOutlined />} aria-label={t('More ways to open')} />
       </Dropdown>
     </Space.Compact>
   )
@@ -145,7 +149,7 @@ function OpenButton({ label, type, style, onOpen }: OpenButtonProps) {
     <>
       {showRomHacksBadge(new Date()) ? (
         <Badge
-          count="New"
+          count={t('New')}
           size="small"
           color="yellow"
           // antd sets the badge to width: fit-content, and Space.Compact items to z-index 2-4.

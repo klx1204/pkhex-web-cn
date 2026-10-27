@@ -1,9 +1,15 @@
 import { Typography } from 'antd'
-import { applicationName, gitHubRepositoryIssues } from '../../constants'
+import { applicationName, applicationNameEn, gitHubRepositoryIssues } from '../../constants'
+import { useI18n } from '../../i18n'
 
 export default function PrivacyPolicyPage() {
+  const { locale } = useI18n()
+  return <Typography>{locale === 'zh-Hans' ? <Chinese /> : <English />}</Typography>
+}
+
+function Chinese() {
   return (
-    <Typography>
+    <>
       <h1>隐私政策</h1>
       <p>生效日期：2026-10-28</p>
 
@@ -48,6 +54,65 @@ export default function PrivacyPolicyPage() {
         </a>{' '}
         提问。
       </p>
-    </Typography>
+    </>
+  )
+}
+
+function English() {
+  return (
+    <>
+      <h1>Privacy Policy</h1>
+      <p>Effective date: 2026-10-28</p>
+
+      <h2>1. Overview</h2>
+      <p>
+        {applicationNameEn} is a Pokémon save editor that runs in your browser. Every save is parsed and edited on your
+        device; the app has no backend server.
+      </p>
+
+      <h2>2. Save files</h2>
+      <p>
+        A save you open or drop is parsed in memory and never uploaded. A file only reaches your disk when you choose to
+        export it. Closing or reloading the page discards it.
+      </p>
+
+      <h2>3. Local storage</h2>
+      <p>
+        The app keeps a few values in localStorage and IndexedDB: theme, language, the damage calculator URL, installed
+        plug-ins and their caches. None of it leaves your device, and clearing this site's data removes it.
+      </p>
+
+      <h2>4. What we do not collect</h2>
+      <p>
+        This fork ships without third-party analytics, error reporting or advertising scripts, and sets no tracking
+        cookies. There is therefore no cookie banner and nothing to revoke.
+      </p>
+
+      <h2>5. Plug-ins</h2>
+      <p>
+        You can install community plug-ins, which also run locally. How a third-party plug-in handles data is up to its
+        author; install only sources you trust.
+      </p>
+
+      <h2>6. External links</h2>
+      <p>
+        Pages link to external sites such as GitHub. Once you leave this site, those sites' own privacy policies apply.
+      </p>
+
+      <h2>7. Changes</h2>
+      <p>
+        If this policy changes materially, the effective date at the top of this page is updated and the change is
+        noted in the release notes.
+      </p>
+
+      <h2>8. Contact</h2>
+      <p>
+        Questions are welcome on{' '}
+        <a href={gitHubRepositoryIssues} target="_blank">
+          GitHub Issues
+        </a>
+        .
+      </p>
+    </>
   )
 }

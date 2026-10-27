@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { AutoComplete, Descriptions, Flex, Switch } from 'antd'
+import { AutoComplete, Descriptions, Flex, Select, Switch } from 'antd'
 import { calculators } from '../../calculators'
-import { changeCalculatorUrl, changeTheme, useCalculatorUrl, useTheme } from '../../host'
+import { changeCalculatorUrl, changeLocale, changeTheme, useCalculatorUrl, useLocale, useTheme } from '../../host'
+import { useT } from '../../i18n'
+import { localeNames, locales, type Locale } from '../../i18n/locale'
 
 function CalculatorInput() {
   const calculatorUrl = useCalculatorUrl()
+  const t = useT()
   const [text, setText] = useState(() => calculators.find((c) => c.url === calculatorUrl)?.name ?? calculatorUrl)
 
   const handleChange = (value: string | undefined) => {
@@ -16,13 +19,13 @@ function CalculatorInput() {
 
   return (
     <AutoComplete
-      aria-label="Calculator"
+      aria-label={t('Calculator')}
       style={{ width: '100%' }}
       value={text}
       onChange={handleChange}
       options={calculators.map((c) => ({ value: c.name, label: c.name }))}
       filterOption={false}
-      placeholder="Calculator or URL (Default: Showdown)"
+      placeholder={t('Calculator or URL (Default: Showdown)')}
       allowClear
     />
   )
@@ -30,31 +33,48 @@ function CalculatorInput() {
 
 export default function SettingsPage() {
   const theme = useTheme()
+  const locale = useLocale()
+  const t = useT()
 
   return (
     <Flex vertical gap={20}>
       <Descriptions
-        title="General"
+        title={t('General')}
         bordered
         size="small"
         column={1}
-        items={[{ key: 'calculator', label: 'Calculator', children: <CalculatorInput /> }]}
+        items={[
+          { key: 'calculator', label: t('Calculator'), children: <CalculatorInput /> },
+          {
+            key: 'language',
+            label: t('Language'),
+            children: (
+              <Select<Locale>
+                aria-label={t('Language')}
+                style={{ width: 200 }}
+                value={locale}
+                onChange={changeLocale}
+                options={locales.map((value) => ({ value, label: localeNames[value] }))}
+              />
+            ),
+          },
+        ]}
       />
       <Descriptions
-        title="Appearance"
+        title={t('Appearance')}
         bordered
         size="small"
         column={1}
         items={[
           {
             key: 'theme',
-            label: 'Theme',
+            label: t('Theme'),
             children: (
               <Switch
                 checked={theme === 'dark'}
                 onChange={(dark) => changeTheme(dark ? 'dark' : 'light')}
-                checkedChildren="Dark"
-                unCheckedChildren="Light"
+                checkedChildren={t('Dark')}
+                unCheckedChildren={t('Light')}
               />
             ),
           },

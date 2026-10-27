@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Alert } from 'antd'
 import { Link } from 'react-router'
 import { settings } from '../host'
+import { useI18n } from '../i18n'
 import { checkUnseenNews, markNewsSeen, news as newsEntries, newsHeadline } from '../news'
 import { routes } from '../routes'
 
 export function NewsBanner() {
+  const { locale, t } = useI18n()
   const [news] = useState(() => checkUnseenNews(settings, new Date()))
   const [visible, setVisible] = useState(false)
 
@@ -38,13 +40,19 @@ export function NewsBanner() {
         type="info"
         banner
         showIcon={false}
-        closable={{ closeIcon: <span style={{ fontSize: '0.7em' }}>Dismiss</span>, onClose: () => markNewsSeen(settings) }}
+        closable={{ closeIcon: <span style={{ fontSize: '0.7em' }}>{t('Dismiss')}</span>, onClose: () => markNewsSeen(settings) }}
         title={
           <span style={{ fontSize: '0.7em', display: 'flex', justifyContent: 'center' }}>
             <div>
               {newsHeadline(newsEntries[0])}
               <br />
-              See <Link to={routes.releaseNotes(news.since)}>what's new</Link>.
+              {locale === 'zh-Hans' ? (
+                <Link to={routes.releaseNotes(news.since)}>{t("See what's new")}</Link>
+              ) : (
+                <>
+                  See <Link to={routes.releaseNotes(news.since)}>what's new</Link>.
+                </>
+              )}
             </div>
           </span>
         }

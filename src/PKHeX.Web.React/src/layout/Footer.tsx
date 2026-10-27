@@ -1,9 +1,11 @@
 import { Flex, Layout } from 'antd'
 import { Link } from 'react-router'
 import { applicationName, applicationNameEn, gitHubRepository, upstreamRepository } from '../constants'
+import { useT } from '../i18n'
 import { routes } from '../routes'
 
 export function Footer() {
+  const t = useT()
   return (
     <Layout.Footer style={{ textAlign: 'center' }}>
       <p>
@@ -23,10 +25,10 @@ export function Footer() {
         </a>
       </p>
       <Flex wrap justify="center" gap="8px 16px">
-        <Link to={routes.privacyPolicy}>Privacy Policy</Link>
-        <Link to={routes.termsOfUse}>Terms of Use</Link>
-        <Link to={routes.credits}>Credits</Link>
-        <Link to={routes.releaseNotes()}>Release Notes</Link>
+        <Link to={routes.privacyPolicy}>{t('Privacy Policy')}</Link>
+        <Link to={routes.termsOfUse}>{t('Terms of Use')}</Link>
+        <Link to={routes.credits}>{t('Credits')}</Link>
+        <Link to={routes.releaseNotes()}>{t('Release Notes')}</Link>
       </Flex>
     </Layout.Footer>
   )

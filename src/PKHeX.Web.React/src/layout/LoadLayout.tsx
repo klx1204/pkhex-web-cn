@@ -1,8 +1,10 @@
 import { Layout } from 'antd'
+import { useT } from '../i18n'
 import { Footer } from './Footer'
 import { RoutedContent } from './RoutedContent'
 
 export function LoadLayout() {
+  const t = useT()
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout.Content style={{ margin: '24px 16px 0', display: 'flex', justifyContent: 'center' }}>
@@ -19,7 +21,7 @@ export function LoadLayout() {
             gap: 20,
           }}
         >
-          Open a save file
+          {t('Open a save file')}
           <RoutedContent />
         </div>
       </Layout.Content>

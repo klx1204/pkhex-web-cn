@@ -1,38 +1,41 @@
 import { Table, type TableColumnsType } from 'antd'
 import type { PokemonSummary } from '@pkhex-everywhere/engine'
+import { useT } from '../i18n'
 import { PokemonActions } from './PokemonActions'
 import { PokemonSprite } from './PokemonSprite'
 import { NumberFilter } from './filters/NumberFilter'
 import { containsText } from './filters/containsText'
 import { TextFilter } from './filters/TextFilter'
 
-const leadingColumns: TableColumnsType<PokemonSummary> = [
+type Translate = (key: string) => string
+
+const leadingColumns = (t: Translate): TableColumnsType<PokemonSummary> => [
   {
     key: 'sprite',
     width: 80,
     render: (_, pokemon) => <PokemonSprite pokemon={pokemon} />,
   },
   {
-    title: 'Name',
+    title: t('Name'),
     dataIndex: 'species',
     sorter: (a, b) => a.species.localeCompare(b.species),
-    filterDropdown: (props) => <TextFilter {...props} placeholder="Name" />,
+    filterDropdown: (props) => <TextFilter {...props} placeholder={t('Name')} />,
     onFilter: (value, pokemon) => containsText(pokemon.species, value),
   },
   {
-    title: 'Level',
+    title: t('Level'),
     dataIndex: 'level',
     sorter: (a, b) => a.level - b.level,
-    filterDropdown: (props) => <NumberFilter {...props} placeholder="Level" min={1} max={100} />,
+    filterDropdown: (props) => <NumberFilter {...props} placeholder={t('Level')} min={1} max={100} />,
     onFilter: (value, pokemon) => pokemon.level === value,
   },
 ]
 
-const actionColumn: TableColumnsType<PokemonSummary>[number] = {
-  title: 'Action',
+const actionColumn = (t: Translate): TableColumnsType<PokemonSummary>[number] => ({
+  title: t('Action'),
   key: 'action',
   render: (_, pokemon) => <PokemonActions pokemon={pokemon} />,
-}
+})
 
 const rowKey = (pokemon: PokemonSummary) => JSON.stringify(pokemon.at)
 
@@ -45,11 +48,12 @@ interface PokemonTableProps {
 }
 
 export function PokemonTable({ pokemon, extraColumns = [], actions = true, selected = [], onSelectedChange }: PokemonTableProps) {
+  const t = useT()
   return (
     <Table<PokemonSummary>
       rowKey={rowKey}
       dataSource={pokemon}
-      columns={[...leadingColumns, ...extraColumns, ...(actions ? [actionColumn] : [])]}
+      columns={[...leadingColumns(t), ...extraColumns, ...(actions ? [actionColumn(t)] : [])]}
       rowSelection={
         onSelectedChange && {
           selectedRowKeys: selected.map(rowKey),
