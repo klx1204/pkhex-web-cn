@@ -18,6 +18,9 @@ public sealed class Session
 
     public Game? Game { get; private set; }
     public string? FileName { get; private set; }
+
+    /// <summary>The language the legality report is written in, such as <c>en</c> or <c>zh-Hans</c>.</summary>
+    public string Language { get; set; } = "en";
     internal IReadOnlyList<Encounter>? Encounters { get; set; }
     internal Draft? Draft { get; set; }
     internal TransferPartner? Partner { get; set; }

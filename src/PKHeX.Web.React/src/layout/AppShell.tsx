@@ -196,6 +196,8 @@ export function AppShell({ autoLoad }: { autoLoad: boolean }) {
   useEffect(() => {
     document.documentElement.lang = locale === 'zh-Hans' ? 'zh-CN' : 'en'
     dayjs.locale(locale === 'zh-Hans' ? 'zh-cn' : 'en')
+    // The legality report is written by the engine, so it needs the locale too.
+    void engine.ready.then(() => engine.game.setLanguage(locale))
   }, [locale])
 
   return (

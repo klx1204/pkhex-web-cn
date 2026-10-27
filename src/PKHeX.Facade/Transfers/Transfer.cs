@@ -457,6 +457,6 @@ public class Transfer(Game mine, Game partner)
         .ToList();
 
     internal static PokemonLegality? LegalityIn(Game destination, Pokemon arrival) => destination.Supports(Capability.Legality)
-        ? SaveRules.Under(destination.SaveFile, arrival.LegalityReport)
+        ? SaveRules.Under(destination.SaveFile, () => arrival.LegalityReport())
         : null;
 }

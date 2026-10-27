@@ -9,7 +9,10 @@ public partial class Pokemon
 {
     public PokemonDetails Details() => Details(withLegality: true);
 
-    internal PokemonDetails Details(bool withLegality) => new(
+    /// <summary>Reads the details with the legality report written in <paramref name="language"/>.</summary>
+    public PokemonDetails Details(string? language) => Details(withLegality: true, language);
+
+    internal PokemonDetails Details(bool withLegality, string? language = null) => new(
         Species.Id,
         Pkm.Form,
         Gender,
@@ -48,7 +51,7 @@ public partial class Pokemon
         Pkm is ICombatPower combatPower ? combatPower.Stat_CP : null,
         Pkm is PB7 pb7 ? pb7.CalcCP : null,
         Moves.Values.Select(move => new MoveSlot(move.Move.Id, move.Move.Name, move.PP.Current, move.PP.Max) { IsUnknown = move.Move.IsUnknown }).ToArray(),
-        withLegality && Game.Supports(Capability.Legality) ? this.LegalityReport() : null)
+        withLegality && Game.Supports(Capability.Legality) ? this.LegalityReport(language) : null)
     {
         HeldItemIsUnknown = HeldItem.IsUnknown,
         IsUnknown = IsUnknown,

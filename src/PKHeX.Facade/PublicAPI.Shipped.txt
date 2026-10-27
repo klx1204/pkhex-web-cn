@@ -300,6 +300,7 @@ PKHeX.Facade.Pokemons.Pokemon.ChangeNickname(string! nickname) -> void
 PKHeX.Facade.Pokemons.Pokemon.Clone() -> PKHeX.Facade.Pokemons.Pokemon!
 PKHeX.Facade.Pokemons.Pokemon.ConvertTo(PKHeX.Facade.Game! target, out PKHeX.Core.EntityConverterResult result) -> PKHeX.Facade.Pokemons.Pokemon?
 PKHeX.Facade.Pokemons.Pokemon.Details() -> PKHeX.Facade.Pokemons.PokemonDetails!
+PKHeX.Facade.Pokemons.Pokemon.Details(string? language) -> PKHeX.Facade.Pokemons.PokemonDetails!
 PKHeX.Facade.Pokemons.Pokemon.EVs.get -> PKHeX.Facade.Pokemons.Stats!
 PKHeX.Facade.Pokemons.Pokemon.Egg.get -> PKHeX.Facade.Pokemons.Egg!
 PKHeX.Facade.Pokemons.Pokemon.Experience.get -> uint
@@ -855,7 +856,7 @@ static PKHeX.Facade.Extensions.GameExtensions.FindPokemon(this PKHeX.Facade.Game
 static PKHeX.Facade.Extensions.IdiomaticFunctions.ListOfNotNull<T>(params T?[]! items) -> System.Collections.Generic.IList<T>!
 static PKHeX.Facade.Extensions.PokemonExtensions.ApplyLegalAsync(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> System.Threading.Tasks.Task!
 static PKHeX.Facade.Extensions.PokemonExtensions.Legality(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> PKHeX.Core.LegalityAnalysis!
-static PKHeX.Facade.Extensions.PokemonExtensions.LegalityReport(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> PKHeX.Facade.Pokemons.PokemonLegality!
+static PKHeX.Facade.Extensions.PokemonExtensions.LegalityReport(this PKHeX.Facade.Pokemons.Pokemon! pokemon, string? language = null) -> PKHeX.Facade.Pokemons.PokemonLegality!
 static PKHeX.Facade.Extensions.PokemonExtensions.NameDisplay(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> string!
 static PKHeX.Facade.Extensions.PokemonExtensions.PidDisplay(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> string!
 static PKHeX.Facade.Extensions.PokemonExtensions.Showdown(this PKHeX.Facade.Pokemons.Pokemon! pokemon) -> string!

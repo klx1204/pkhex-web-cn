@@ -18,7 +18,7 @@ public static class PokemonHandlers
 
     [Requires(Requirement.Save)]
     [Query("pokemon.details", Topics.Party, Topics.Box, Topics.Team, Topics.Draft)]
-    public static EditablePokemon Details(Session session, PokemonHandle at) => session.Find(at).Pokemon.Details().ToEditable();
+    public static EditablePokemon Details(Session session, PokemonHandle at) => session.Find(at).Pokemon.Details(session.Language).ToEditable();
 
     /// <summary>
     /// Reads one Gen 3, 4 or 5, Colosseum or XD Pokémon from bytes taken from a running game, without a loaded save. Nothing is written, and <c>legality</c> is null.

@@ -45,11 +45,6 @@ export function useLoadedGame() {
   const commands = useMemo(
     () => ({
       close: () => engine.game.close(),
-      /**
-       * Turns on a save format that's registered off, such as a ROM hack that hasn't been validated yet. Until then, `game.formats()` leaves it out and a save it recognizes fails with `invalid-save`.
-       *
-       * @param id The format's id. An unknown id fails with `not-found`.
-       */
       enableFormat: (id: string) => engine.game.enableFormat(id),
       /** Requires a loaded save; throws `no-save` otherwise. Wrap in `<RequireGame>`. */
       export: () => engine.game.export(),
@@ -63,6 +58,8 @@ export function useLoadedGame() {
        */
       load: (data: Binary, fileName?: string | null, formatId?: string | null) => engine.game.load(data, fileName, formatId),
       loadBlank: (version: number) => engine.game.loadBlank(version),
+      /** Turns on a save format that's registered off, such as a ROM hack that hasn't been validated yet. Until then, `game.formats()` leaves it out and a save it recognizes fails with `invalid-save`. */
+      setLanguage: (language: string) => engine.game.setLanguage(language),
     }),
     [engine],
   )

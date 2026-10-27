@@ -26,11 +26,11 @@ public static class PokemonExtensions
 
     public static LegalityAnalysis Legality(this Pokemon pokemon) => new (pokemon.Pkm);
     
-    public static PokemonLegality LegalityReport(this Pokemon pokemon)
+    public static PokemonLegality LegalityReport(this Pokemon pokemon, string? language = null)
     {
         pokemon.Game.Require(Capability.Legality);
         var analysis = pokemon.Legality();
-        var localization = LegalityLocalizationContext.Create(analysis);
+        var localization = LegalityLocalizationContext.Create(analysis, language ?? GameLanguage.DefaultLanguage);
         var messages = new List<string>();
         foreach (var result in analysis.Results)
             if (result.Judgement == Severity.Invalid) messages.Add($"{result.Identifier}: {localization.Humanize(result)}");

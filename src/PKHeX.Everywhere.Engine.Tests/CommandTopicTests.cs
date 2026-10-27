@@ -59,6 +59,7 @@ public class CommandTopicTests
             Args(Convert.ToBase64String(File.ReadAllBytes(saveFile == SaveFilePath.HgSs ? SaveFilePath.Emerald : SaveFilePath.HgSs)), "other.sav", null!),
         ],
         ["game.loadBlank"] = (game, _) => [Args((int)(game.SaveVersion.Version == GameVersion.SW ? GameVersion.SH : GameVersion.SW))],
+        ["game.setLanguage"] = (_, _) => [Args("zh-Hans")],
         ["game.close"] = (_, _) => ["[]"],
         ["inventory.get"] = (_, _) => ["[]"],
         ["inventory.setItem"] = (game, _) => SetItems(game),

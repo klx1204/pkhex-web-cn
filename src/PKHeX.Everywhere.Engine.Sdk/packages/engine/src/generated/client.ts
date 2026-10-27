@@ -7,7 +7,7 @@ export type Invoke = <T>(call: CallName, args: unknown[]) => Promise<T>
 
 export const queries = ['box.get', 'box.list', 'box.previewFile', 'box.showdown', 'catalog.names', 'encounters.events', 'encounters.search', 'encounters.versions', 'events.flag', 'events.get', 'game.balls', 'game.blankVersions', 'game.formats', 'game.get', 'game.heldItems', 'game.languages', 'game.moves', 'game.natures', 'game.originGames', 'game.progress', 'game.types', 'game.version', 'inventory.get', 'mysteryGift.events', 'mysteryGift.previewEvent', 'mysteryGift.previewFile', 'mysteryGift.status', 'party.get', 'party.showdown', 'plugins.actions', 'plugins.details', 'plugins.failures', 'plugins.installed', 'plugins.isSupported', 'plugins.pageModule', 'plugins.pages', 'plugins.setting', 'plugins.state', 'pokemon.details', 'pokemon.export', 'pokemon.get', 'pokemon.options', 'pokemon.read', 'pokemon.showdown', 'species.list', 'team.get', 'team.list', 'trainer.badges', 'trainer.get', 'transfer.convert', 'transfer.details', 'transfer.export', 'transfer.get', 'transfer.partnerBoxes', 'transfer.preview'] as const
 
-export const commands = ['box.addEncounter', 'box.addFromFile', 'events.giveTickets', 'events.setFlag', 'events.setWork', 'game.close', 'game.enableFormat', 'game.export', 'game.file', 'game.load', 'game.loadBlank', 'inventory.setItem', 'mysteryGift.insertEvent', 'mysteryGift.insertFile', 'mysteryGift.remove', 'mysteryGift.setReceived', 'mysteryGift.setUnlocked', 'plugins.dismissFailure', 'plugins.newestCompatible', 'plugins.register', 'plugins.run', 'plugins.setEnabled', 'plugins.setHookEnabled', 'plugins.unregister', 'plugins.updateSetting', 'pokemon.addToBox', 'pokemon.clone', 'pokemon.commit', 'pokemon.edit', 'pokemon.setLevel', 'pokemon.update', 'team.clear', 'team.place', 'trainer.setBadges', 'trainer.setBattlePoints', 'trainer.setGender', 'trainer.setMoney', 'trainer.setName', 'transfer.close', 'transfer.commit', 'transfer.open'] as const
+export const commands = ['box.addEncounter', 'box.addFromFile', 'events.giveTickets', 'events.setFlag', 'events.setWork', 'game.close', 'game.enableFormat', 'game.export', 'game.file', 'game.load', 'game.loadBlank', 'game.setLanguage', 'inventory.setItem', 'mysteryGift.insertEvent', 'mysteryGift.insertFile', 'mysteryGift.remove', 'mysteryGift.setReceived', 'mysteryGift.setUnlocked', 'plugins.dismissFailure', 'plugins.newestCompatible', 'plugins.register', 'plugins.run', 'plugins.setEnabled', 'plugins.setHookEnabled', 'plugins.unregister', 'plugins.updateSetting', 'pokemon.addToBox', 'pokemon.clone', 'pokemon.commit', 'pokemon.edit', 'pokemon.setLevel', 'pokemon.update', 'team.clear', 'team.place', 'trainer.setBadges', 'trainer.setBattlePoints', 'trainer.setGender', 'trainer.setMoney', 'trainer.setName', 'transfer.close', 'transfer.commit', 'transfer.open'] as const
 
 export type QueryName = (typeof queries)[number]
 
@@ -62,11 +62,6 @@ export interface EngineClient {
     balls(): Promise<Choice[]>
     blankVersions(): Promise<VersionEntry[]>
     close(): Promise<void>
-    /**
-     * Turns on a save format that's registered off, such as a ROM hack that hasn't been validated yet. Until then, `game.formats()` leaves it out and a save it recognizes fails with `invalid-save`.
-     *
-     * @param id The format's id. An unknown id fails with `not-found`.
-     */
     enableFormat(id: string): Promise<void>
     /** Requires a loaded save; throws `no-save` otherwise. */
     export(): Promise<ExportedSave>
@@ -95,6 +90,8 @@ export interface EngineClient {
     originGames(): Promise<Choice[]>
     /** Reads the save's play time, gym badges and Pokédex counts. Requires a loaded save; throws `no-save` otherwise. */
     progress(): Promise<GameProgress>
+    /** Turns on a save format that's registered off, such as a ROM hack that hasn't been validated yet. Until then, `game.formats()` leaves it out and a save it recognizes fails with `invalid-save`. */
+    setLanguage(language: string): Promise<void>
     /** Names the type ids in a Pokémon's `types`, from Normal (0) to Fairy (17). The list is the same for every save. Requires a loaded save; throws `no-save` otherwise. */
     types(): Promise<Choice[]>
     version(): Promise<SaveVersion | null>
@@ -320,6 +317,7 @@ export function createClient(invoke: Invoke): EngineClient {
       natures: () => invoke('game.natures', []),
       originGames: () => invoke('game.originGames', []),
       progress: () => invoke('game.progress', []),
+      setLanguage: (language) => invoke('game.setLanguage', [language]),
       types: () => invoke('game.types', []),
       version: () => invoke('game.version', []),
     },

@@ -120,6 +120,14 @@ public static class GameHandlers
     /// Until then, <c>game.formats()</c> leaves it out and a save it recognizes fails with <c>invalid-save</c>.
     /// </summary>
     /// <param name="id">The format's id. An unknown id fails with <c>not-found</c>.</param>
+    /// <summary>Sets the language the legality report is written in, such as <c>en</c> or <c>zh-Hans</c>. Every loaded Pokémon is re-read.</summary>
+    [Command("game.setLanguage", Topics.All)]
+    public static void SetLanguage(Session session, string language)
+    {
+        session.Language = language;
+        session.Invalidate(Topics.All);
+    }
+
     [Command("game.enableFormat")]
     public static void EnableFormat(string id)
     {

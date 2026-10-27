@@ -26,7 +26,7 @@ public class EventEncounterTests
         {
             var pokemon = gift.ConvertToPokemon();
             pokemon.Pkm.Should().BeOfType(game.SaveFile.PKMType);
-            SaveRules.Under(game.SaveFile, pokemon.LegalityReport).Should().Match<Pokemons.PokemonLegality>(l => l.Valid, $"{gift.Species} from {gift.Version.Name} should be legal");
+            SaveRules.Under(game.SaveFile, () => pokemon.LegalityReport()).Should().Match<Pokemons.PokemonLegality>(l => l.Valid, $"{gift.Species} from {gift.Version.Name} should be legal");
         }
     }
 
