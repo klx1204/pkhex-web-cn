@@ -8,6 +8,7 @@ import { ChoiceSelect } from './ChoiceSelect'
 import { ExperienceModal } from './ExperienceModal'
 import { isLocked } from './locked'
 import { useDraft } from './useDraft'
+import { useT } from '../../i18n'
 
 const typesUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield'
 
@@ -18,6 +19,7 @@ const genders: { value: PokemonGender; label: string }[] = [
 ]
 
 export function DescriptionTab() {
+  const t = useT()
   const { details, submit } = useDraft()
   const options = useQuery('pokemon.options', draftHandle)
   const natures = useQuery('game.natures')
@@ -29,14 +31,14 @@ export function DescriptionTab() {
   const items: DescriptionsProps['items'] = [
     {
       key: 'species',
-      label: 'Species',
+      label: t('Species'),
       children: (
         <ChoiceSelect label="Species" choices={options.species} value={details.species} onChange={(species) => submit({ species })} />
       ),
     },
     {
       key: 'types',
-      label: 'Types',
+      label: t('Types'),
       children: (
         <Space size={5} wrap>
           {details.types.map((type) => (
@@ -47,12 +49,12 @@ export function DescriptionTab() {
     },
     {
       key: 'pid',
-      label: 'PID',
+      label: t('PID'),
       children: <Typography.Text copyable>{details.pid.toString(16).toUpperCase().padStart(8, '0')}</Typography.Text>,
     },
     {
       key: 'nickname',
-      label: 'Nickname',
+      label: t('Nickname'),
       children: (
         <Typography.Text editable={{ text: details.nickname, onChange: (nickname) => submit({ nickname }) }}>
           {details.nickname}
@@ -61,7 +63,7 @@ export function DescriptionTab() {
     },
     {
       key: 'gender',
-      label: 'Gender',
+      label: t('Gender'),
       children: (
         <Radio.Group
           aria-label="Gender"
@@ -76,7 +78,7 @@ export function DescriptionTab() {
     },
     {
       key: 'shiny',
-      label: 'Shiny',
+      label: t('Shiny'),
       children: <Switch aria-label="Shiny" checked={details.isShiny} onChange={(isShiny) => submit({ isShiny })} />,
     },
     ...(details.isAlpha === null
@@ -84,13 +86,13 @@ export function DescriptionTab() {
       : [
           {
             key: 'alpha',
-            label: 'Alpha',
+            label: t('Alpha'),
             children: <Switch aria-label="Alpha" checked={details.isAlpha} onChange={(isAlpha: boolean) => submit({ isAlpha })} />,
           },
         ]),
     {
       key: 'level',
-      label: 'Level',
+      label: t('Level'),
       children: (
         <Space>
           <InputNumber
@@ -111,7 +113,7 @@ export function DescriptionTab() {
       : [
           {
             key: 'nature',
-            label: 'Nature',
+            label: t('Nature'),
             children: (
               <ChoiceSelect
                 label="Nature"
@@ -128,7 +130,7 @@ export function DescriptionTab() {
       : [
           {
             key: 'form',
-            label: 'Form',
+            label: t('Form'),
             children: <ChoiceSelect label="Form" choices={options.forms} value={details.form} onChange={(form) => submit({ form })} />,
           },
         ]),
@@ -137,7 +139,7 @@ export function DescriptionTab() {
       : [
           {
             key: 'heldItem',
-            label: 'Held Item',
+            label: t('Held Item'),
             children: (
               <ItemSelect
                 items={options.heldItems}
@@ -153,7 +155,7 @@ export function DescriptionTab() {
       : [
           {
             key: 'ability',
-            label: 'Ability',
+            label: t('Ability'),
             children: (
               <ChoiceSelect
                 label="Ability"
@@ -170,13 +172,13 @@ export function DescriptionTab() {
       : [
           {
             key: 'ball',
-            label: 'Ball',
+            label: t('Ball'),
             children: <ItemSelect items={balls} label="Ball" value={details.ball} onChange={(ball) => submit({ ball: ball.id })} />,
           },
         ]),
     {
       key: 'friendship',
-      label: details.isEgg ? 'Hatch Counter' : 'Friendship',
+      label: t(details.isEgg ? 'Hatch Counter' : 'Friendship'),
       children: (
         <InputNumber
           aria-label={details.isEgg ? 'Hatch Counter' : 'Friendship'}
@@ -192,7 +194,7 @@ export function DescriptionTab() {
       : [
           {
             key: 'language',
-            label: 'Language',
+            label: t('Language'),
             children: (
               <ChoiceSelect
                 label="Language"
@@ -205,17 +207,17 @@ export function DescriptionTab() {
         ]),
     {
       key: 'egg',
-      label: 'Egg',
+      label: t('Egg'),
       children: <Switch aria-label="Egg" checked={details.isEgg} onChange={(isEgg) => submit({ isEgg })} />,
     },
     {
       key: 'infected',
-      label: 'Infected',
+      label: t('Infected'),
       children: <Switch aria-label="Infected" disabled checked={details.isInfected} />,
     },
     {
       key: 'cured',
-      label: 'Cured',
+      label: t('Cured'),
       children: <Switch aria-label="Cured" disabled checked={details.isCured} />,
     },
   ]

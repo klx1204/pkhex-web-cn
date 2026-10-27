@@ -40,6 +40,7 @@ export function NewsBanner() {
         type="info"
         banner
         showIcon={false}
+        style={{ background: 'var(--pkm-accent-soft)', color: 'var(--pkm-text)' }}
         closable={{ closeIcon: <span style={{ fontSize: '0.7em' }}>{t('Dismiss')}</span>, onClose: () => markNewsSeen(settings) }}
         title={
           <span style={{ fontSize: '0.7em', display: 'flex', justifyContent: 'center' }}>

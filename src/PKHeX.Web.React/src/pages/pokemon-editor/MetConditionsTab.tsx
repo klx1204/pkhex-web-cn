@@ -7,8 +7,10 @@ import { ItemSelect } from '../../components/ItemSelect'
 import { ChoiceSelect } from './ChoiceSelect'
 import { isLocked } from './locked'
 import { useDraft } from './useDraft'
+import { useT } from '../../i18n'
 
 export function MetConditionsTab() {
+  const t = useT()
   const { details, submit } = useDraft()
   const options = useQuery('pokemon.options', draftHandle)
   const originGames = useQuery('game.originGames')
@@ -21,7 +23,7 @@ export function MetConditionsTab() {
       : [
           {
             key: 'version',
-            label: 'Origin Game',
+            label: t('Origin Game'),
             children: (
               <ChoiceSelect
                 label="Origin Game"
@@ -37,7 +39,7 @@ export function MetConditionsTab() {
       : [
           {
             key: 'metLocation',
-            label: 'Location',
+            label: t('Location'),
             children: (
               <ChoiceSelect
                 label="Location"
@@ -50,7 +52,7 @@ export function MetConditionsTab() {
           },
           {
             key: 'metLevel',
-            label: 'Level',
+            label: t('Level'),
             children: (
               <InputNumber
                 aria-label="Met Level"
@@ -67,7 +69,7 @@ export function MetConditionsTab() {
       : [
           {
             key: 'ball',
-            label: 'Captured With',
+            label: t('Captured With'),
             children: <ItemSelect items={balls} label="Ball" value={details.ball} onChange={(ball) => submit({ ball: ball.id })} />,
           },
         ]),
@@ -76,7 +78,7 @@ export function MetConditionsTab() {
       : [
           {
             key: 'metDate',
-            label: 'Date',
+            label: t('Date'),
             children: (
               <DatePicker
                 aria-label="Met Date"
@@ -90,7 +92,7 @@ export function MetConditionsTab() {
         ]),
     {
       key: 'fatefulEncounter',
-      label: 'Fateful Encounter',
+      label: t('Fateful Encounter'),
       children: (
         <Switch
           aria-label="Fateful Encounter"

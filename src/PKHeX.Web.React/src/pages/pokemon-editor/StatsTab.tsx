@@ -5,6 +5,7 @@ import { useLoadedGame, useQuery } from '@pkhex-everywhere/react'
 import { gameName, statsAreApproximate } from '../../capabilities'
 import { PlugInActionButton } from '../../components/PlugInActionButton'
 import { useDraft } from './useDraft'
+import { useT } from '../../i18n'
 
 type Stat = keyof StatValues
 
@@ -20,6 +21,7 @@ const stats: { key: Stat; label: string }[] = [
 const total = (values: StatValues) => stats.reduce((sum, stat) => sum + values[stat.key], 0)
 
 export function StatsTab() {
+  const t = useT()
   const { details, submit } = useDraft()
   const { game } = useLoadedGame()
   const actions = useQuery('plugins.actions', 'pokemonStats', draftHandle)
@@ -27,13 +29,13 @@ export function StatsTab() {
   const layout = screens.sm ? 'horizontal' : 'vertical'
 
   const inputs: { key: 'ivs' | 'evs' | 'avs'; label: string; values: StatValues | null }[] = [
-    { key: 'ivs', label: 'IV', values: details.ivs },
-    { key: 'evs', label: 'EV', values: details.evs },
-    { key: 'avs', label: 'AV', values: details.avs },
+    { key: 'ivs', label: t('IV'), values: details.ivs },
+    { key: 'evs', label: t('EV'), values: details.evs },
+    { key: 'avs', label: t('AV'), values: details.avs },
   ]
 
   const statItems = (stat: { key: Stat; label: string }): DescriptionsProps['items'] => [
-    { key: 'stat', label: 'Stat', children: details.stats[stat.key] },
+    { key: 'stat', label: t('Stat'), children: details.stats[stat.key] },
     ...inputs.flatMap(({ key, label, values }) =>
       values === null
         ? []
@@ -43,7 +45,7 @@ export function StatsTab() {
               label,
               children: (
                 <InputNumber
-                  aria-label={`${stat.label} ${label}`}
+                  aria-label={`${t(stat.label)} ${label}`}
                   min={0}
                   value={values[stat.key]}
                   onChange={(value) => value !== null && submit({ [key]: { [stat.key]: value } as StatPatch })}
@@ -55,7 +57,7 @@ export function StatsTab() {
   ]
 
   const totalItems: DescriptionsProps['items'] = [
-    { key: 'stat', label: 'Stat', children: total(details.stats) },
+    { key: 'stat', label: t('Stat'), children: total(details.stats) },
     ...inputs.flatMap(({ key, label, values }) => (values === null ? [] : [{ key, label, children: total(values) }])),
   ]
 
@@ -65,24 +67,24 @@ export function StatsTab() {
         <Alert
           type="info"
           showIcon
-          title={`Stats are approximate. They use the original games' base stats, which ${gameName(game)} may change.`}
+          title={t("Stats are approximate. They use the original games' base stats, which {game} may change.", { game: gameName(game) })}
         />
       )}
       {stats.map((stat) => (
-        <Descriptions key={stat.key} bordered size="small" layout={layout} title={stat.label} items={statItems(stat)} />
+        <Descriptions key={stat.key} bordered size="small" layout={layout} title={t(stat.label)} items={statItems(stat)} />
       ))}
-      <Descriptions bordered size="small" layout={layout} title="Total" items={totalItems} />
+      <Descriptions bordered size="small" layout={layout} title={t('Total')} items={totalItems} />
       {details.hiddenPower && (
         <Descriptions
           bordered
           size="small"
           layout={layout}
-          title="Hidden Power"
+          title={t('Hidden Power')}
           items={[
-            { key: 'type', label: 'Type', children: details.hiddenPower.type },
+            { key: 'type', label: t('Type'), children: details.hiddenPower.type },
             ...(details.hiddenPower.power === null
               ? []
-              : [{ key: 'power', label: 'Power', children: details.hiddenPower.power }]),
+              : [{ key: 'power', label: t('Power'), children: details.hiddenPower.power }]),
           ]}
         />
       )}
@@ -91,20 +93,20 @@ export function StatsTab() {
           bordered
           size="small"
           layout={layout}
-          title="Extra"
+          title={t('Extra')}
           items={[
             {
               key: 'combatPower',
-              label: 'CP',
+              label: t('CP'),
               children: (
                 <Space>
                   <InputNumber
-                    aria-label="CP"
+                    aria-label={t('CP')}
                     min={0}
                     value={details.combatPower}
                     onChange={(combatPower) => combatPower !== null && submit({ combatPower })}
                   />
-                  <Button onClick={() => submit({ combatPower: details.calculatedCombatPower })}>Re-calculate</Button>
+                  <Button onClick={() => submit({ combatPower: details.calculatedCombatPower })}>{t('Re-calculate')}</Button>
                 </Space>
               ),
             },
