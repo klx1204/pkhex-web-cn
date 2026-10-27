@@ -27,8 +27,7 @@ export function NewsBanner() {
   return (
     <div
       style={{
-        position: 'absolute',
-        top: 0,
+        position: 'relative',
         width: '100%',
         zIndex: 9,
         transition: 'opacity 0.5s ease-in-out',

@@ -10,7 +10,7 @@ import {
   ShopOutlined,
   TeamOutlined,
 } from '@ant-design/icons'
-import { Button, Layout, Menu, Space, type MenuProps } from 'antd'
+import { Button, Flex, Layout, Menu, Space, type MenuProps } from 'antd'
 import { Link, useLocation } from 'react-router'
 import { useLoadedGame, useQuery } from '@pkhex-everywhere/react'
 import { changeLocale, changeTheme, useLocale, useNavigate, useTheme } from '../host'
@@ -70,12 +70,14 @@ export function MainLayout() {
   const t = useT()
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Flex vertical style={{ minHeight: '100vh' }}>
       <NewsBanner />
+      <Layout style={{ flex: 1 }}>
       <Layout.Sider
         theme="light"
         collapsible
         breakpoint="lg"
+        width={220}
         collapsedWidth={64}
         style={{
           position: 'sticky',
@@ -84,6 +86,7 @@ export function MainLayout() {
           overflow: 'auto',
           background: 'var(--pkm-card)',
           borderRight: '1px solid var(--pkm-line)',
+          flex: '0 0 220px',
         }}
       >
         <div
@@ -144,6 +147,7 @@ export function MainLayout() {
         </Layout.Content>
         <Footer />
       </Layout>
-    </Layout>
+      </Layout>
+    </Flex>
   )
 }

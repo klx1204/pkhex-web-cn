@@ -28,18 +28,19 @@ export function MovesTab() {
       {details.moves.map((slot, index) => (
         <Descriptions
           key={index}
-          title={`Move ${index + 1}`}
+          title={`${t('Move')} ${index + 1}`}
           bordered
           size="small"
           layout={layout}
           items={[
             {
               key: 'move',
-              label: 'Move',
+              label: t('Move'),
               style: { maxWidth: 250 },
               children: (
                 <ChoiceSelect
-                  label={`Move ${index + 1}`}
+                  kind="move"
+                  label={`${t('Move')} ${index + 1}`}
                   choices={choicesFor(slot)}
                   value={slot.id}
                   onChange={(id) => change(index, id)}

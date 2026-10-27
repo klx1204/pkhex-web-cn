@@ -4,6 +4,7 @@ import { draftHandle } from '@pkhex-everywhere/engine'
 import { useEngine, useQuery } from '@pkhex-everywhere/react'
 import { PlugInActionButton } from '../../components/PlugInActionButton'
 import { downloadFile } from '../../host'
+import { useT } from '../../i18n'
 
 interface SaveDropdownProps {
   onSave: () => void
@@ -11,6 +12,7 @@ interface SaveDropdownProps {
 
 export function SaveDropdown({ onSave }: SaveDropdownProps) {
   const engine = useEngine()
+  const t = useT()
   const actions = useQuery('plugins.actions', 'pokemon', draftHandle)
 
   const exportFile = async () => {
@@ -21,13 +23,13 @@ export function SaveDropdown({ onSave }: SaveDropdownProps) {
   return (
     <Space.Compact>
       <Button type="primary" onClick={onSave}>
-        Save
+        {t('Save changes')}
       </Button>
       <Dropdown
         trigger={['click']}
         menu={{
           items: [
-            { key: 'export', label: 'Export *.pk', onClick: () => void exportFile() },
+            { key: 'export', label: t('Export *.pk'), onClick: () => void exportFile() },
             ...actions.map((action) => ({
               key: action.id,
               label: <PlugInActionButton action={action} target={draftHandle} />,
@@ -35,7 +37,7 @@ export function SaveDropdown({ onSave }: SaveDropdownProps) {
           ],
         }}
       >
-        <Button type="primary" icon={<EllipsisOutlined />} aria-label="More actions" />
+        <Button type="primary" icon={<EllipsisOutlined />} aria-label={t('More actions')} />
       </Dropdown>
     </Space.Compact>
   )

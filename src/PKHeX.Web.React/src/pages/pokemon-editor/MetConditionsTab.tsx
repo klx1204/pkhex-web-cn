@@ -26,7 +26,8 @@ export function MetConditionsTab() {
             label: t('Origin Game'),
             children: (
               <ChoiceSelect
-                label="Origin Game"
+                label={t('Origin Game')}
+                kind="game"
                 choices={originGames}
                 value={details.version}
                 onChange={(version) => submit({ version })}
@@ -42,7 +43,8 @@ export function MetConditionsTab() {
             label: t('Location'),
             children: (
               <ChoiceSelect
-                label="Location"
+                label={t('Location')}
+                kind="location"
                 choices={options.metLocations}
                 value={details.metLocation}
                 disabled={isLocked(options, 'metLocation')}

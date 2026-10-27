@@ -33,7 +33,7 @@ export function DescriptionTab() {
       key: 'species',
       label: t('Species'),
       children: (
-        <ChoiceSelect label="Species" choices={options.species} value={details.species} onChange={(species) => submit({ species })} />
+        <ChoiceSelect label={t("Species")} kind="species" choices={options.species} value={details.species} onChange={(species) => submit({ species })} />
       ),
     },
     {
@@ -103,7 +103,7 @@ export function DescriptionTab() {
             onChange={(level) => level !== null && submit({ level })}
           />
           <Button type="link" size="small" onClick={() => setEditingExperience(true)}>
-            Edit EXP
+            {t('Edit EXP')}
           </Button>
         </Space>
       ),
@@ -116,7 +116,8 @@ export function DescriptionTab() {
             label: t('Nature'),
             children: (
               <ChoiceSelect
-                label="Nature"
+                label={t('Nature')}
+                kind="nature"
                 choices={natures}
                 value={details.nature}
                 disabled={isLocked(options, 'nature')}
@@ -131,7 +132,7 @@ export function DescriptionTab() {
           {
             key: 'form',
             label: t('Form'),
-            children: <ChoiceSelect label="Form" choices={options.forms} value={details.form} onChange={(form) => submit({ form })} />,
+            children: <ChoiceSelect label={t("Form")} kind="form" choices={options.forms} value={details.form} onChange={(form) => submit({ form })} />,
           },
         ]),
     ...(options.heldItems.length <= 1
@@ -143,7 +144,7 @@ export function DescriptionTab() {
             children: (
               <ItemSelect
                 items={options.heldItems}
-                label="Held Item"
+                label={t('Held Item')}
                 value={details.heldItem}
                 onChange={(item) => submit({ heldItem: item.id })}
               />
@@ -158,7 +159,8 @@ export function DescriptionTab() {
             label: t('Ability'),
             children: (
               <ChoiceSelect
-                label="Ability"
+                label={t('Ability')}
+                kind="ability"
                 choices={options.abilities}
                 value={details.ability}
                 disabled={isLocked(options, 'ability')}

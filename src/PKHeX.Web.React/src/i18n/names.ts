@@ -46,7 +46,7 @@ const english: GameNames = {
 }
 
 function from(table: Names): NameTable {
-  return (name) => table[name] ?? name
+  return (name) => table[name] ?? table[name.replace(/^\((.*)\)$/, '$1')] ?? name
 }
 
 /** Maps the English names the engine sends to the current locale's game names. */
